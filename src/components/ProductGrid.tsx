@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface Product {
   id: number;
@@ -14,6 +15,9 @@ interface Product {
 }
 
 export default function ProductGrid({ products }: { products: Product[] }) {
+  const t = useTranslations('productGrid');
+  const tc = useTranslations('common');
+  const locale = useLocale();
   const [showAll, setShowAll] = useState(false);
 
   // Products to display: if expanded, show all, otherwise show the first 4
@@ -23,13 +27,13 @@ export default function ProductGrid({ products }: { products: Product[] }) {
     <section className="py-24 bg-gray-50 relative">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
         <div className="mb-12">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-brand-dark mb-4">Top Products</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-brand-dark mb-4">{t('topProducts')}</h2>
           <div className="w-20 h-1.5 bg-brand-primary rounded-full"></div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 transition-all duration-500">
           {displayedProducts.map((product) => (
-            <a key={product.id} href={`/product/${product.slug}`} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full border border-gray-100">
+            <a key={product.id} href={`/${locale}/product/${product.slug}`} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full border border-gray-100">
               <div className="relative aspect-[4/5] bg-gray-50 p-8 flex items-center justify-center">
                 {product.images && product.images.length > 0 ? (
                   <img 
@@ -38,7 +42,7 @@ export default function ProductGrid({ products }: { products: Product[] }) {
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700" 
                   />
                 ) : (
-                  <div className="text-gray-400 font-medium">No Image</div>
+                  <div className="text-gray-400 font-medium">{t('noImage')}</div>
                 )}
               </div>
               
@@ -78,17 +82,17 @@ export default function ProductGrid({ products }: { products: Product[] }) {
               className="bg-white border-2 border-brand-primary text-brand-primary px-10 py-4 rounded-full text-center font-bold text-lg hover:bg-brand-primary hover:text-white transition-all flex items-center shadow-sm"
             >
               {showAll ? (
-                <>Show Less <ChevronUp className="w-5 h-5 ml-2" /></>
+                <>{tc('showLess')} <ChevronUp className="w-5 h-5 ml-2" /></>
               ) : (
-                <>View More Products <ChevronDown className="w-5 h-5 ml-2" /></>
+                <>{tc('viewMoreProducts')} <ChevronDown className="w-5 h-5 ml-2" /></>
               )}
             </button>
           ) : (
             <a
-              href="/shop"
+              href={`/${locale}/shop`}
               className="bg-white border-2 border-brand-primary text-brand-primary px-10 py-4 rounded-full text-center font-bold text-lg hover:bg-brand-primary hover:text-white transition-all flex items-center shadow-sm"
             >
-              View All Products <ChevronRight className="w-5 h-5 ml-2" />
+              {tc('viewAllProducts')} <ChevronRight className="w-5 h-5 ml-2" />
             </a>
           )}
         </div>

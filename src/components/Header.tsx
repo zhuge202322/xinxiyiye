@@ -1,48 +1,50 @@
 'use client';
 
 import { useState } from 'react';
-import { Award, Globe, ChevronDown, Search, Menu, X } from "lucide-react";
+import { ChevronDown, Search, Menu, X } from "lucide-react";
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const PRODUCT_NAV = [
   {
-    name: 'Laundry Care',
     slug: 'laundry-care',
     children: [
-      { name: 'Laundry Scent Booster Beads', slug: 'laundry-scent-booster-beads' },
-      { name: 'Laundry Sheets', slug: 'laundry-sheets' },
-      { name: 'Dryer Sheets', slug: 'dryer-sheets' },
+      { name: { en: 'Laundry Scent Booster Beads', fr: 'Perles parfumées pour le linge',          es: 'Perlas perfumadas para la ropa',          ar: 'حبيبات معطّرة للغسيل' },               slug: 'laundry-scent-booster-beads' },
+      { name: { en: 'Laundry Sheets',              fr: 'Feuilles de lessive',                     es: 'Hojas de detergente',                     ar: 'صفائح غسيل' },                          slug: 'laundry-sheets' },
+      { name: { en: 'Dryer Sheets',                fr: 'Feuilles assouplissantes',                es: 'Hojas suavizantes',                       ar: 'صفائح تنعيم للمجفّف' },                slug: 'dryer-sheets' },
     ],
   },
   {
-    name: 'Bathroom Care',
     slug: 'bathroom-care',
     children: [
-      { name: 'Toilet Bowl Cleaner', slug: 'toilet-bowl-cleaner' },
-      { name: 'Multipurpose Cleaner', slug: 'multipurpose-cleaner' },
-      { name: 'Sink and Drain Cleaner', slug: 'sink-and-drain-cleaner' },
+      { name: { en: 'Multipurpose Cleaner',        fr: 'Nettoyant multi-usages',                  es: 'Limpiador multiusos',                     ar: 'منظّف متعدد الاستخدامات' },           slug: 'multipurpose-cleaner' },
+      { name: { en: 'Sink and Drain Cleaner',      fr: 'Nettoyant évier et canalisations',        es: 'Limpiador de fregaderos y desagües',      ar: 'منظّف الأحواض والمصارف' },             slug: 'sink-and-drain-cleaner' },
     ],
   },
   {
-    name: 'Kitchen Care',
     slug: 'kitchen-care',
     children: [
-      { name: 'Kitchen Degreaser', slug: 'kitchen-degreaser' },
-      { name: 'Mould Removal', slug: 'mould-removal' },
-      { name: 'Garbage Disposal Cleaner', slug: 'garbage-disposal-cleaner' },
-      { name: 'Stainless Steel Cleaner', slug: 'stainless-steel-cleaner' },
+      { name: { en: 'Kitchen Degreaser',           fr: 'Dégraissant cuisine',                     es: 'Desengrasante de cocina',                 ar: 'مزيل الدهون للمطبخ' },                 slug: 'kitchen-degreaser' },
+      { name: { en: 'Mould Removal',               fr: 'Anti-moisissures',                        es: 'Eliminador de moho',                      ar: 'مزيل العفن' },                          slug: 'mould-removal' },
+      { name: { en: 'Garbage Disposal Cleaner',    fr: "Nettoyant pour broyeur d'évier",          es: 'Limpiador de triturador de basura',       ar: 'منظّف مفرمة النفايات' },               slug: 'garbage-disposal-cleaner' },
+      { name: { en: 'Stainless Steel Cleaner',     fr: 'Nettoyant acier inoxydable',              es: 'Limpiador de acero inoxidable',           ar: 'منظّف الستانلس ستيل' },                slug: 'stainless-steel-cleaner' },
     ],
   },
   {
-    name: 'Appliance Care',
     slug: 'appliance-care',
     children: [
-      { name: 'Washing Machine Drum Cleaner', slug: 'washing-machine-drum-cleaner' },
-      { name: 'Coffee Maker Descaler', slug: 'coffee-maker-descaler' },
+      { name: { en: 'Washing Machine Drum Cleaner', fr: 'Nettoyant tambour de machine à laver',   es: 'Limpiador del tambor de lavadora',        ar: 'منظّف حلّة الغسالة' },                  slug: 'washing-machine-drum-cleaner' },
+      { name: { en: 'Coffee Maker Descaler',        fr: 'Détartrant pour machine à café',          es: 'Descalcificador para cafetera',           ar: 'مزيل الترسبات لماكينة القهوة' },        slug: 'coffee-maker-descaler' },
     ],
   },
-];
+] as const;
+
+type LocaleKey = 'en' | 'fr' | 'es' | 'ar';
 
 export default function Header() {
+  const t = useTranslations();
+  const locale = useLocale() as LocaleKey;
+  const lp = `/${locale}`;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
 
@@ -50,7 +52,7 @@ export default function Header() {
     <header className="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm relative">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo only - no company name */}
-        <a href="/" className="flex items-center gap-2">
+        <a href={lp || '/'} className="flex items-center gap-2">
           <img src="/bj/logo.png" alt="Myklens" className="h-10 md:h-12 w-auto object-contain" />
         </a>
 
@@ -58,26 +60,26 @@ export default function Header() {
         <nav className="hidden lg:flex h-full">
           <div className="flex h-full">
             <a
-              href="/"
+              href={lp}
               className="px-5 h-full flex items-center text-sm font-bold text-brand-dark hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition"
             >
-              Home
+              {t('nav.home')}
             </a>
 
             <a
-              href="/about"
+              href={`${lp}/about`}
               className="px-5 h-full flex items-center text-sm font-bold text-brand-dark hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition"
             >
-              About Us
+              {t('nav.about')}
             </a>
 
             {/* Products mega menu */}
             <div className="group h-full">
               <a
-                href="/shop"
+                href={`${lp}/shop`}
                 className="px-5 h-full flex items-center text-sm font-bold text-brand-dark group-hover:text-brand-primary border-b-2 border-transparent group-hover:border-brand-primary transition"
               >
-                Products <ChevronDown className="w-4 h-4 ml-1" />
+                {t('nav.products')} <ChevronDown className="w-4 h-4 ml-1" />
               </a>
 
               <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
@@ -85,19 +87,19 @@ export default function Header() {
                   {PRODUCT_NAV.map((cat) => (
                     <div key={cat.slug} className="flex flex-col">
                       <a
-                        href={`/shop?category=${cat.slug}`}
+                        href={`${lp}/shop?category=${cat.slug}`}
                         className="text-brand-dark font-extrabold text-base mb-4 pb-2 border-b border-gray-100 hover:text-brand-primary transition"
                       >
-                        {cat.name}
+                        {t(`categories.${cat.slug}` as any)}
                       </a>
                       <ul className="space-y-3">
                         {cat.children.map((sub) => (
                           <li key={sub.slug}>
                             <a
-                              href={`/product/${sub.slug}`}
+                              href={`${lp}/product/${sub.slug}`}
                               className="text-gray-600 hover:text-brand-primary text-sm font-medium transition"
                             >
-                              {sub.name}
+                              {sub.name[locale]}
                             </a>
                           </li>
                         ))}
@@ -109,35 +111,36 @@ export default function Header() {
             </div>
 
             <a
-              href="/oem-odm"
+              href={`${lp}/oem-odm`}
               className="px-5 h-full flex items-center text-sm font-bold text-brand-dark hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition"
             >
-              OEM/ODM
+              {t('nav.oemOdm')}
             </a>
             <a
-              href="/news"
+              href={`${lp}/news`}
               className="px-5 h-full flex items-center text-sm font-bold text-brand-dark hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition"
             >
-              Blog
+              {t('nav.blog')}
             </a>
             <a
-              href="/contact"
+              href={`${lp}/contact`}
               className="px-5 h-full flex items-center text-sm font-bold text-brand-dark hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition"
             >
-              Contact Us
+              {t('nav.contact')}
             </a>
           </div>
         </nav>
 
         <div className="hidden lg:flex items-center space-x-5">
-          <button className="text-brand-dark hover:text-brand-primary transition" aria-label="Search">
+          <LanguageSwitcher />
+          <button className="text-brand-dark hover:text-brand-primary transition" aria-label={t('nav.search')}>
             <Search className="w-5 h-5" />
           </button>
           <a
-            href="/contact"
+            href={`${lp}/contact`}
             className="bg-brand-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-opacity-90 transition-all shadow-md"
           >
-            Get A Quote
+            {t('nav.getQuote')}
           </a>
         </div>
 
@@ -154,11 +157,11 @@ export default function Header() {
       {mobileOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
           <nav className="flex flex-col px-4 py-4 space-y-1">
-            <a href="/" className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
-              Home
+            <a href={lp} className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
+              {t('nav.home')}
             </a>
-            <a href="/about" className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
-              About Us
+            <a href={`${lp}/about`} className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
+              {t('nav.about')}
             </a>
 
             <div className="border-b border-gray-50">
@@ -166,7 +169,7 @@ export default function Header() {
                 onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
                 className="w-full flex justify-between items-center px-3 py-3 text-brand-dark font-bold"
               >
-                Products
+                {t('nav.products')}
                 <ChevronDown
                   className={`w-4 h-4 transition-transform ${mobileProductsOpen ? 'rotate-180' : ''}`}
                 />
@@ -176,19 +179,19 @@ export default function Header() {
                   {PRODUCT_NAV.map((cat) => (
                     <div key={cat.slug}>
                       <a
-                        href={`/shop?category=${cat.slug}`}
+                        href={`${lp}/shop?category=${cat.slug}`}
                         className="block py-2 font-bold text-brand-primary text-sm"
                       >
-                        {cat.name}
+                        {t(`categories.${cat.slug}` as any)}
                       </a>
                       <ul className="pl-3 space-y-1">
                         {cat.children.map((sub) => (
                           <li key={sub.slug}>
                             <a
-                              href={`/product/${sub.slug}`}
+                              href={`${lp}/product/${sub.slug}`}
                               className="block py-1.5 text-gray-600 text-sm"
                             >
-                              {sub.name}
+                              {sub.name[locale]}
                             </a>
                           </li>
                         ))}
@@ -199,21 +202,23 @@ export default function Header() {
               )}
             </div>
 
-            <a href="/oem-odm" className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
-              OEM/ODM
+            <a href={`${lp}/oem-odm`} className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
+              {t('nav.oemOdm')}
             </a>
-            <a href="/news" className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
-              Blog
+            <a href={`${lp}/news`} className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
+              {t('nav.blog')}
             </a>
-            <a href="/contact" className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
-              Contact Us
+            <a href={`${lp}/contact`} className="px-3 py-3 text-brand-dark font-bold border-b border-gray-50">
+              {t('nav.contact')}
             </a>
 
+            <LanguageSwitcher variant="mobile" />
+
             <a
-              href="/contact"
+              href={`${lp}/contact`}
               className="mt-4 bg-brand-primary text-white text-center px-6 py-3 rounded-full text-sm font-bold"
             >
-              Get A Quote
+              {t('nav.getQuote')}
             </a>
           </nav>
         </div>

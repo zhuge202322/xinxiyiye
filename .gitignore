@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# user uploads (large, served at runtime)
+/public/uploads/
+
+# local dumps & scratch
+/products-dump.json
+/tmp-product-desc/
+prisma/**/*.db
+prisma/**/*.db-journal

@@ -1,14 +1,8 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
-const nextConfig: NextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: '/wp-proxy/:path*',
-        destination: 'http://45.145.229.20:6411/:path*',
-      },
-    ]
-  },
-};
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-export default nextConfig;
+const nextConfig: NextConfig = {};
+
+export default withNextIntl(nextConfig);

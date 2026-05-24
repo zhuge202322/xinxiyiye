@@ -2,6 +2,7 @@
 
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface Post {
   id: number;
@@ -56,6 +57,8 @@ function SlideInView({ children, direction = 'left', delay = 0 }: { children: Re
 }
 
 export default function ArticleShowcase({ posts }: { posts: Post[] }) {
+  const t = useTranslations('articleShowcase');
+  const locale = useLocale();
   if (!posts || posts.length === 0) return null;
 
   return (
@@ -85,10 +88,10 @@ export default function ArticleShowcase({ posts }: { posts: Post[] }) {
                       dangerouslySetInnerHTML={{ __html: excerpt }}
                     />
                     <a 
-                      href={`/news/${post.slug}`} 
+                      href={`/${locale}/news/${post.slug}`} 
                       className="inline-flex items-center text-[#1e2a44] font-medium text-lg hover:text-brand-primary transition-colors"
                     >
-                      Learn More <ArrowRight className="w-5 h-5 ml-2" />
+                      {t('learnMore')} <ArrowRight className="w-5 h-5 ml-2" />
                     </a>
                   </div>
                 </SlideInView>
@@ -105,7 +108,7 @@ export default function ArticleShowcase({ posts }: { posts: Post[] }) {
                     />
                   ) : (
                     <div className="w-full h-auto aspect-[4/3] sm:aspect-video bg-gray-200 rounded-3xl shadow-lg flex items-center justify-center">
-                      <span className="text-gray-400 font-medium">No Image</span>
+                      <span className="text-gray-400 font-medium">{t('noImage')}</span>
                     </div>
                   )}
                 </SlideInView>
