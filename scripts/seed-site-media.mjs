@@ -25,7 +25,8 @@ const SLOTS = [
 
   // 全局联系方式与社交媒体设置 (类型为 text)
   { key: 'contact-email',         label: '官方联络邮箱',                              url: 'info@myklens.com',           kind: 'text' },
-  { key: 'contact-phone',         label: '官方联络电话（页脚/联络页显示）',           url: '+86 180 2215 3690',          kind: 'text' },
+  { key: 'contact-phone',         label: '官方联络电话（座机 / 热线，页脚显示）',     url: '+86 760-88220790 / 88220791', kind: 'text' },
+  { key: 'contact-mobile',        label: '官方移动手机（联系我们页显示）',           url: '+86 180 2215 3690',          kind: 'text' },
   { key: 'whatsapp-num',          label: 'WhatsApp 手机号（全站跳转调用，必须带国家区号不要有+和-，如 8618022153690）', url: '8618022153690', kind: 'text' },
   { key: 'social-facebook',       label: 'Facebook 社交媒体链接',                    url: 'https://facebook.com/myklens', kind: 'text' },
   { key: 'social-twitter',        label: 'Twitter (X) 社交媒体链接',                  url: 'https://twitter.com',        kind: 'text' },

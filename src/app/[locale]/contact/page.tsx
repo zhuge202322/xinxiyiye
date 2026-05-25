@@ -18,7 +18,8 @@ export default async function ContactPage() {
 
   // 动态读取全局联络邮箱和电话
   const email = await getMedia('contact-email', 'info@myklens.com');
-  const phone = await getMedia('contact-phone', '+86 180 2215 3690');
+  const phone = await getMedia('contact-phone', '+86 760-88220790 / 88220791');
+  const mobile = await getMedia('contact-mobile', '+86 180 2215 3690');
 
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
@@ -73,7 +74,10 @@ export default async function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-brand-dark text-lg mb-2">{t('hotline')}</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed font-medium whitespace-pre-line">{phone}</p>
+                  <div className="text-gray-600 text-sm leading-relaxed font-medium space-y-1">
+                    <p><span className="text-slate-400 font-bold mr-1">座机 (Landline):</span> {phone}</p>
+                    <p><span className="text-slate-400 font-bold mr-1">手机 (Mobile):</span> {mobile}</p>
+                  </div>
                 </div>
               </div>
 
