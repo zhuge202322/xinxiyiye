@@ -22,6 +22,15 @@ const SLOTS = [
   { key: 'landing-line-1',        label: 'Google Landing 产品图 1',                  url: '/bj/bubble.jpg',             kind: 'image' },
   { key: 'landing-line-2',        label: 'Google Landing 产品图 2',                  url: '/bj/beads.jpg',              kind: 'image' },
   { key: 'landing-line-3',        label: 'Google Landing 产品图 3',                  url: '/bj/coffee.jpg',             kind: 'image' },
+
+  // 全局联系方式与社交媒体设置 (类型为 text)
+  { key: 'contact-email',         label: '官方联络邮箱',                              url: 'info@myklens.com',           kind: 'text' },
+  { key: 'contact-phone',         label: '官方联络电话（页脚/联络页显示）',           url: '+86 180 2215 3690',          kind: 'text' },
+  { key: 'whatsapp-num',          label: 'WhatsApp 手机号（全站跳转调用，必须带国家区号不要有+和-，如 8618022153690）', url: '8618022153690', kind: 'text' },
+  { key: 'social-facebook',       label: 'Facebook 社交媒体链接',                    url: 'https://facebook.com/myklens', kind: 'text' },
+  { key: 'social-twitter',        label: 'Twitter (X) 社交媒体链接',                  url: 'https://twitter.com',        kind: 'text' },
+  { key: 'social-instagram',      label: 'Instagram 社交媒体链接',                    url: 'https://instagram.com',      kind: 'text' },
+  { key: 'social-linkedin',       label: 'LinkedIn 社交媒体链接',                     url: 'https://linkedin.com',       kind: 'text' },
 ];
 
 let created = 0;

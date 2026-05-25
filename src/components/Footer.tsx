@@ -28,6 +28,16 @@ export default async function Footer() {
   const lp = `/${locale}`;
   const logoUrl = await getMedia('logo', '/bj/logo.png');
 
+  // 动态读取数据库中的全局联系方式及社媒链接
+  const email = await getMedia('contact-email', 'info@myklens.com');
+  const phone = await getMedia('contact-phone', '+86 180 2215 3690');
+  const whatsappNum = await getMedia('whatsapp-num', '8618022153690');
+  
+  const facebookUrl = await getMedia('social-facebook', 'https://facebook.com/myklens');
+  const twitterUrl = await getMedia('social-twitter', 'https://twitter.com');
+  const instagramUrl = await getMedia('social-instagram', 'https://instagram.com');
+  const linkedinUrl = await getMedia('social-linkedin', 'https://linkedin.com');
+
   return (
     <footer className="bg-gray-900 text-gray-300 pt-20 pb-10">
       <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
@@ -43,11 +53,11 @@ export default async function Footer() {
               {t('footer.tagline')}
             </p>
             <div className="flex flex-wrap gap-3">
-              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><FacebookIcon className="w-5 h-5" /></a>
-              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><YoutubeIcon className="w-5 h-5" /></a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><InstagramIcon className="w-5 h-5" /></a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><LinkedinIcon className="w-5 h-5" /></a>
-              <a href="https://wa.me/8618022153690" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-all"><WhatsappIcon className="w-5 h-5" /></a>
+              <a href={facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><FacebookIcon className="w-5 h-5" /></a>
+              <a href={twitterUrl} target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><YoutubeIcon className="w-5 h-5" /></a>
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><InstagramIcon className="w-5 h-5" /></a>
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all"><LinkedinIcon className="w-5 h-5" /></a>
+              <a href={`https://wa.me/${whatsappNum}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-all"><WhatsappIcon className="w-5 h-5" /></a>
             </div>
           </div>
 
@@ -84,15 +94,15 @@ export default async function Footer() {
               </li>
               <li className="flex items-center">
                 <Phone className="w-5 h-5 mr-3 text-brand-primary shrink-0" />
-                <span>+86 760-88220790 / 88220791</span>
+                <span>{phone}</span>
               </li>
               <li className="flex items-center">
                 <Phone className="w-5 h-5 mr-3 text-brand-primary shrink-0" />
-                <span>WhatsApp: +86 180 2215 3690</span>
+                <span>WhatsApp: {phone}</span>
               </li>
               <li className="flex items-center">
                 <Mail className="w-5 h-5 mr-3 text-brand-primary shrink-0" />
-                <span>contact@myklens.com</span>
+                <span>{email}</span>
               </li>
             </ul>
           </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Save, RefreshCw, Image, Film, FileText, CheckCircle2 } from 'lucide-react';
+import { Save, RefreshCw, Image, Film, FileText, CheckCircle2, Mail, Phone, MessageSquare, Link, Settings } from 'lucide-react';
 import MediaUploader from '@/components/admin/MediaUploader';
 
 type SiteMediaItem = {
@@ -9,7 +9,7 @@ type SiteMediaItem = {
   key: string;
   label: string;
   url: string;
-  kind: 'image' | 'video';
+  kind: 'image' | 'video' | 'text';
 };
 
 export default function MediaManagerPage() {
@@ -72,13 +72,25 @@ export default function MediaManagerPage() {
     );
   }
 
+  const mediaItems = items.filter((x) => x.kind !== 'text');
+  const configItems = items.filter((x) => x.kind === 'text');
+
+  // 根据 key 匹配相应的图标
+  function getIcon(key: string) {
+    if (key.includes('email')) return <Mail className="w-4 h-4 text-slate-500" />;
+    if (key.includes('phone')) return <Phone className="w-4 h-4 text-slate-500" />;
+    if (key.includes('whatsapp')) return <MessageSquare className="w-4 h-4 text-emerald-600" />;
+    if (key.includes('social')) return <Link className="w-4 h-4 text-brand-primary" />;
+    return <Settings className="w-4 h-4 text-slate-500" />;
+  }
+
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-4xl space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-extrabold text-slate-800">网站本地媒体配置</h2>
+          <h2 className="text-xl font-extrabold text-slate-800">网站全局配置中心 (Media & Settings)</h2>
           <p className="text-xs text-slate-500 mt-1">
-            在这里可以统一管理网站所有静态页面（首页、内页背景、Logo、轮播图等）调用的媒体图片和视频。
+            在这里可以统一管理网站所有的本地媒体文件（Logo、背景、视频）以及邮箱、电话、WhatsApp和社交媒体等全局业务信息。
           </p>
         </div>
         <button
@@ -98,40 +110,72 @@ export default function MediaManagerPage() {
 
       {success && (
         <div className="bg-emerald-50 text-emerald-700 text-sm rounded-xl border border-emerald-200 px-4 py-3 flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4" /> 媒体配置已更新成功！
+          <CheckCircle2 className="w-4 h-4" /> 网站全局配置已更新成功！
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 overflow-hidden">
-        {items.map((item) => (
-          <div key={item.key} className="p-6 flex flex-col md:flex-row gap-6 items-start md:items-center">
-            <div className="flex-1 space-y-1">
+      {/* 模块一：全局联络 & 社媒链接 */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+        <div>
+          <h3 className="text-sm font-extrabold text-slate-800">1. 页脚 & 联系页全局业务信息 (Contact & Social Links)</h3>
+          <p className="text-xs text-slate-400 mt-0.5">管理员在这里修改后，页脚（Footer）和 Contact 联络页面的相关信息会实时更新。</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {configItems.map((item) => (
+            <div key={item.key} className="space-y-1.5 p-4 rounded-xl bg-slate-50/50 border border-slate-200/60">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm text-slate-800">{item.label}</span>
-                <span className="text-[10px] bg-slate-100 text-slate-600 font-mono font-bold px-1.5 py-0.5 rounded border border-slate-200/50">
-                  {item.key}
-                </span>
-                {item.kind === 'video' ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] bg-sky-50 text-sky-700 border border-sky-200 px-1.5 py-0.5 rounded font-bold">
-                    <Film className="w-3 h-3" /> 视频
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold">
-                    <Image className="w-3 h-3" /> 图片
-                  </span>
-                )}
+                {getIcon(item.key)}
+                <span className="text-xs font-bold text-slate-700">{item.label}</span>
               </div>
-              <p className="text-xs text-slate-400 break-all font-mono">当前路径: {item.url || '未设置'}</p>
-            </div>
-            <div className="w-full md:w-auto">
-              <MediaUploader
+              <input
+                type="text"
                 value={item.url}
-                onChange={(url) => updateUrl(item.key, url)}
-                kind={item.kind}
+                onChange={(e) => updateUrl(item.key, e.target.value)}
+                placeholder="请输入配置内容..."
+                className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none bg-white focus:border-brand-primary transition"
               />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* 模块二：网站本地媒体 */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+        <div>
+          <h3 className="text-sm font-extrabold text-slate-800">2. 网站多媒体资源管理 (Media Banners)</h3>
+          <p className="text-xs text-slate-400 mt-0.5">替换网站大背景图、轮播主图和公司视频。</p>
+        </div>
+        <div className="divide-y divide-slate-100 border border-slate-100 rounded-xl overflow-hidden bg-white">
+          {mediaItems.map((item) => (
+            <div key={item.key} className="p-5 flex flex-col md:flex-row gap-6 items-start md:items-center">
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-sm text-slate-800">{item.label}</span>
+                  <span className="text-[10px] bg-slate-100 text-slate-600 font-mono font-bold px-1.5 py-0.5 rounded border border-slate-200/50">
+                    {item.key}
+                  </span>
+                  {item.kind === 'video' ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] bg-sky-50 text-sky-700 border border-sky-200 px-1.5 py-0.5 rounded font-bold">
+                      <Film className="w-3 h-3" /> 视频
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold">
+                      <Image className="w-3 h-3" /> 图片
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-400 break-all font-mono">当前路径: {item.url || '未设置'}</p>
+              </div>
+              <div className="w-full md:w-auto shrink-0">
+                <MediaUploader
+                  value={item.url}
+                  onChange={(url) => updateUrl(item.key, url)}
+                  kind={item.kind as any}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

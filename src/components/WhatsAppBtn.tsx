@@ -1,9 +1,9 @@
 'use client';
 
-export default function WhatsAppBtn() {
+export default function WhatsAppBtn({ whatsappNum = '8618022153690' }: { whatsappNum?: string }) {
   return (
     <a
-      href="https://wa.me/8618022153690"
+      href={`https://wa.me/${whatsappNum}`}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-24 right-5 md:bottom-8 md:right-8 z-[90] bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center group"

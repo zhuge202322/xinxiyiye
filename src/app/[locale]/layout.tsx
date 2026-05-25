@@ -51,6 +51,8 @@ export default async function LocaleLayout({
 
   const dir = isRtl(locale) ? "rtl" : "ltr";
   const logoUrl = await getMedia("logo", "/bj/logo.png");
+  const whatsappNum = await getMedia("whatsapp-num", "8618022153690");
+  const contactPhone = await getMedia("contact-phone", "+86 180 2215 3690");
 
   // 实时从后台数据库提取分类和产品数据
   const dbCategories = await prisma.category.findMany({
@@ -92,10 +94,15 @@ export default async function LocaleLayout({
     >
       <body className="text-brand-dark min-h-screen flex flex-col relative">
         <NextIntlClientProvider>
-          <Header logoUrl={logoUrl} categories={navCategories} />
+          <Header
+            logoUrl={logoUrl}
+            categories={navCategories}
+            whatsappNum={whatsappNum}
+            contactPhone={contactPhone}
+          />
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />
-          <WhatsAppBtn />
+          <WhatsAppBtn whatsappNum={whatsappNum} />
           <ThemeCustomizer />
           <AnalyticsTracker />
         </NextIntlClientProvider>

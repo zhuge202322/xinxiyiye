@@ -53,9 +53,13 @@ type NavCategory = {
 export default function Header({
   logoUrl = '/bj/logo.png',
   categories = PRODUCT_NAV as any,
+  whatsappNum = '8618022153690',
+  contactPhone = '+86 180 2215 3690',
 }: {
   logoUrl?: string;
   categories?: any[];
+  whatsappNum?: string;
+  contactPhone?: string;
 }) {
   const t = useTranslations();
   const locale = useLocale() as LocaleKey;

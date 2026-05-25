@@ -16,6 +16,10 @@ export default async function ContactPage() {
   const lp = `/${locale}`;
   const bgHeader = await getMedia('page-header-bg', '/bj/dp.webp');
 
+  // 动态读取全局联络邮箱和电话
+  const email = await getMedia('contact-email', 'info@myklens.com');
+  const phone = await getMedia('contact-phone', '+86 180 2215 3690');
+
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
       
@@ -69,7 +73,7 @@ export default async function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-brand-dark text-lg mb-2">{t('hotline')}</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed font-medium whitespace-pre-line">{t('hotlineLines')}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed font-medium whitespace-pre-line">{phone}</p>
                 </div>
               </div>
 
@@ -80,7 +84,7 @@ export default async function ContactPage() {
                 <div>
                   <h4 className="font-bold text-brand-dark text-lg mb-2">{t('email')}</h4>
                   <p className="text-gray-600 text-sm leading-relaxed font-medium">
-                    <a href="mailto:contact@myklens.com" className="text-brand-primary hover:underline">contact@myklens.com</a>
+                    <a href={`mailto:${email}`} className="text-brand-primary hover:underline">{email}</a>
                   </p>
                 </div>
               </div>
