@@ -25,6 +25,7 @@ export async function getProductsData(locale?: Locale) {
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       categories: true,
+      skus: true,
     },
   });
   return products.map((p) => formatProduct(p, loc));
@@ -39,6 +40,7 @@ export async function getFeaturedProductsData(locale?: Locale) {
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       categories: true,
+      skus: true,
     },
   });
   
@@ -50,6 +52,7 @@ export async function getFeaturedProductsData(locale?: Locale) {
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
         categories: true,
+        skus: true,
       },
     });
   }
@@ -63,6 +66,7 @@ export async function getProductBySlug(slug: string, locale?: Locale) {
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       categories: true,
+      skus: true,
     },
   });
   return product ? formatProduct(product, loc) : null;

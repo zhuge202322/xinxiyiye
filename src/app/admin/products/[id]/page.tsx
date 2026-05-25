@@ -15,6 +15,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
         categories: true,
+        skus: true,
       },
     }),
     prisma.category.findMany({
@@ -37,9 +38,19 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           slug: product.slug,
           shortDescription: product.shortDescription,
           description: product.description,
-          featured: product.featured,
+          featured: (product as any).featured,
           images: product.images.map((img) => ({ src: img.src, alt: img.alt })),
           categoryIds: product.categories.map((c) => c.id),
+          skus: (product as any).skus?.map((s: any) => ({
+            id: s.id,
+            name: s.name,
+            nameFr: s.nameFr || '',
+            nameEs: s.nameEs || '',
+            nameAr: s.nameAr || '',
+            image: s.image,
+            price: s.price || '',
+            size: s.size || '',
+          })) || [],
           translations: {
             name: { fr: (product as any).nameFr || '', es: (product as any).nameEs || '', ar: (product as any).nameAr || '' },
             shortDescription: { fr: (product as any).shortDescriptionFr || '', es: (product as any).shortDescriptionEs || '', ar: (product as any).shortDescriptionAr || '' },

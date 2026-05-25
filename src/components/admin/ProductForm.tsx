@@ -4,14 +4,27 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import RichEditor from './RichEditor';
 import MultiImageUploader, { ImageItem } from './MultiImageUploader';
+import ImageUploader from './ImageUploader';
 import TranslationTabs, { TranslationLocale } from './TranslationTabs';
 import { slugify } from '@/lib/slug';
-import { Save, ArrowLeft } from 'lucide-react';
+import { Save, ArrowLeft, Plus, Trash2, Layers } from 'lucide-react';
 import Link from 'next/link';
 
 type Category = { id: number; name: string };
 
 type LocaleStrings = Record<TranslationLocale, string>;
+
+export type SkuItem = {
+  id?: number;
+  tempId?: string; // 唯一临时 id 用于添加/删除
+  name: string;
+  nameFr?: string;
+  nameEs?: string;
+  nameAr?: string;
+  image: string;
+  price?: string;
+  size?: string;
+};
 
 type Props = {
   mode: 'create' | 'edit';
@@ -24,6 +37,7 @@ type Props = {
     featured?: boolean;
     images: ImageItem[];
     categoryIds: number[];
+    skus?: SkuItem[];
     translations?: {
       name: LocaleStrings;
       shortDescription: LocaleStrings;
@@ -45,6 +59,9 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
   const [featured, setFeatured] = useState(!!initial?.featured);
   const [images, setImages] = useState<ImageItem[]>(initial?.images || []);
   const [categoryIds, setCategoryIds] = useState<number[]>(initial?.categoryIds || []);
+  const [skus, setSkus] = useState<SkuItem[]>(
+    initial?.skus?.map((s) => ({ ...s, tempId: s.id?.toString() || Math.random().toString() })) || []
+  );
   const [nameI18n, setNameI18n] = useState<LocaleStrings>(initial?.translations?.name || EMPTY_LOCALE);
   const [shortDescI18n, setShortDescI18n] = useState<LocaleStrings>(initial?.translations?.shortDescription || EMPTY_LOCALE);
   const [descI18n, setDescI18n] = useState<LocaleStrings>(initial?.translations?.description || EMPTY_LOCALE);
@@ -65,6 +82,32 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
     setCategoryIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }
 
+  function addSku() {
+    setSkus((prev) => [
+      ...prev,
+      {
+        tempId: Math.random().toString(),
+        name: '',
+        nameFr: '',
+        nameEs: '',
+        nameAr: '',
+        image: '',
+        price: '',
+        size: '',
+      },
+    ]);
+  }
+
+  function removeSku(tempId: string) {
+    setSkus((prev) => prev.filter((s) => s.tempId !== tempId));
+  }
+
+  function updateSku(tempId: string, key: keyof SkuItem, val: string) {
+    setSkus((prev) =>
+      prev.map((s) => (s.tempId === tempId ? { ...s, [key]: val } : s))
+    );
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -83,6 +126,15 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
           images,
           categoryIds,
           featured,
+          skus: skus.map((s) => ({
+            name: s.name,
+            nameFr: s.nameFr || '',
+            nameEs: s.nameEs || '',
+            nameAr: s.nameAr || '',
+            image: s.image,
+            price: s.price || '',
+            size: s.size || '',
+          })),
           nameFr: nameI18n.fr, nameEs: nameI18n.es, nameAr: nameI18n.ar,
           shortDescriptionFr: shortDescI18n.fr,
           shortDescriptionEs: shortDescI18n.es,
@@ -192,6 +244,125 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
         <h3 className="text-sm font-bold text-slate-700 mb-3">Product Images</h3>
         <MultiImageUploader value={images} onChange={setImages} />
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div>
+            <h3 className="text-sm font-bold text-slate-700">多 SKU 规格/变体管理 (Product SKUs)</h3>
+            <p className="text-xs text-slate-500 mt-1">
+              在这里可以为该产品添加多种不同的规格变体。每个变体有它对应的**主图**、**各语言下的规格名称**、价格和尺寸。
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={addSku}
+            className="inline-flex items-center gap-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary px-3.5 py-1.5 rounded-lg text-xs font-bold transition"
+          >
+            <Plus className="w-4 h-4" /> 添加变体 SKU
+          </button>
+        </div>
+
+        {skus.length === 0 ? (
+          <div className="text-center py-10 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 text-xs">
+            目前没有任何规格变体。点击右上角“添加变体 SKU”按钮新增。
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {skus.map((sku, index) => (
+              <div
+                key={sku.tempId}
+                className="relative border border-slate-200 rounded-2xl p-5 bg-slate-50/50 hover:bg-slate-50 transition grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6"
+              >
+                {/* 变体图上传 */}
+                <div className="flex flex-col items-center justify-center bg-white border border-slate-200 rounded-xl p-3 shadow-sm h-full min-h-[160px]">
+                  <ImageUploader
+                    value={sku.image}
+                    onChange={(url) => updateSku(sku.tempId!, 'image', url || '')}
+                  />
+                  <span className="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-wide">变体主图 *</span>
+                </div>
+
+                {/* 变体详情填写 */}
+                <div className="space-y-4 relative">
+                  <button
+                    type="button"
+                    onClick={() => removeSku(sku.tempId!)}
+                    className="absolute top-0 right-0 p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
+                    title="删除该规格变体"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 pr-8">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">变体名称 (英文 / 默认) *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="例如: 100g Box"
+                        value={sku.name}
+                        onChange={(e) => updateSku(sku.tempId!, 'name', e.target.value)}
+                        className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">变体名称 (法语)</label>
+                      <input
+                        type="text"
+                        placeholder="例如: Boîte de 100g"
+                        value={sku.nameFr || ''}
+                        onChange={(e) => updateSku(sku.tempId!, 'nameFr', e.target.value)}
+                        className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">变体名称 (西班牙语)</label>
+                      <input
+                        type="text"
+                        placeholder="例如: Caja de 100g"
+                        value={sku.nameEs || ''}
+                        onChange={(e) => updateSku(sku.tempId!, 'nameEs', e.target.value)}
+                        className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">变体名称 (阿拉伯语)</label>
+                      <input
+                        type="text"
+                        placeholder="例如: علبة 100 جرام"
+                        dir="rtl"
+                        value={sku.nameAr || ''}
+                        onChange={(e) => updateSku(sku.tempId!, 'nameAr', e.target.value)}
+                        className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">显示价格 (Price - 可选)</label>
+                      <input
+                        type="text"
+                        placeholder="例如: $12.99"
+                        value={sku.price || ''}
+                        onChange={(e) => updateSku(sku.tempId!, 'price', e.target.value)}
+                        className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">尺寸/容量 (Size / Volume - 可选)</label>
+                      <input
+                        type="text"
+                        placeholder="例如: 100g / 500ml"
+                        value={sku.size || ''}
+                        onChange={(e) => updateSku(sku.tempId!, 'size', e.target.value)}
+                        className="w-full text-xs rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand-primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 p-6">

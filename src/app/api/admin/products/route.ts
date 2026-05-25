@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
     name, slug, shortDescription, description, images, categoryIds,
-    featured,
+    featured, skus,
     nameFr, nameEs, nameAr,
     shortDescriptionFr, shortDescriptionEs, shortDescriptionAr,
     descriptionFr, descriptionEs, descriptionAr,
@@ -56,8 +56,21 @@ export async function POST(req: NextRequest) {
             })),
           }
         : undefined,
+      skus: skus?.length
+        ? {
+            create: skus.map((s: any) => ({
+              name: s.name,
+              nameFr: s.nameFr || '',
+              nameEs: s.nameEs || '',
+              nameAr: s.nameAr || '',
+              image: s.image,
+              price: s.price || '',
+              size: s.size || '',
+            })),
+          }
+        : undefined,
     },
-    include: { images: true, categories: true },
+    include: { images: true, categories: true, skus: true },
   });
 
   return NextResponse.json(product);

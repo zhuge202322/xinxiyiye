@@ -54,6 +54,13 @@ export function formatProduct(p: any, locale: Locale = 'en'): any {
       name: pick(c.name, c.nameFr || '', c.nameEs || '', c.nameAr || '', locale),
       slug: c.slug,
     })),
+    skus: (p.skus || []).map((s: any) => ({
+      id: s.id,
+      name: pick(s.name, s.nameFr || '', s.nameEs || '', s.nameAr || '', locale),
+      image: s.image,
+      price: s.price || '',
+      size: s.size || '',
+    })),
   };
 }
 
