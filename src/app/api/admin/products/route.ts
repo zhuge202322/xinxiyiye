@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
     name, slug, shortDescription, description, images, categoryIds,
+    featured,
     nameFr, nameEs, nameAr,
     shortDescriptionFr, shortDescriptionEs, shortDescriptionAr,
     descriptionFr, descriptionEs, descriptionAr,
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
       slug,
       shortDescription: shortDescription || '',
       description: description || '',
+      featured: !!featured,
       nameFr: nameFr || '',
       nameEs: nameEs || '',
       nameAr: nameAr || '',

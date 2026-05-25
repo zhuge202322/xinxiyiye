@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Award, Globe, ChevronDown, Search, Menu, ChevronRight, MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import JourneyTimeline from "@/components/JourneyTimeline";
 import { getTranslations, getLocale } from 'next-intl/server';
+import { getMedia } from "@/lib/site-media";
 
 import { getCategoriesData } from "@/lib/cms";
 
@@ -12,6 +14,7 @@ export default async function ContactPage() {
   const tc = await getTranslations('common');
   const locale = await getLocale();
   const lp = `/${locale}`;
+  const bgHeader = await getMedia('page-header-bg', '/bj/dp.webp');
 
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
@@ -20,7 +23,7 @@ export default async function ContactPage() {
       {/* 面包屑 / 页面标题 */}
       <div 
         className="relative py-16 md:py-24 bg-cover bg-center bg-no-repeat flex items-center justify-center border-b border-gray-200"
-        style={{ backgroundImage: "url('/bj/dp.webp')" }}
+        style={{ backgroundImage: `url('${bgHeader}')` }}
       >
         <div className="absolute inset-0 bg-white/40"></div>
         <div className="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-8 text-center flex flex-col items-center">

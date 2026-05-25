@@ -5,10 +5,11 @@ import CategoryMatrix from "@/components/CategoryMatrix";
 import ProductGrid from "@/components/ProductGrid";
 import ArticleShowcase from "@/components/ArticleShowcase";
 
-import { getCategoriesData, getProductsData, getPostsData } from "@/lib/cms";
+import { getCategoriesData, getFeaturedProductsData, getPostsData } from "@/lib/cms";
+import { getMedia } from "@/lib/site-media";
 
 const getCategories = getCategoriesData;
-const getProducts = getProductsData;
+const getProducts = getFeaturedProductsData;
 const getPosts = () => getPostsData(3);
 
 export default async function Home() {
@@ -29,16 +30,19 @@ export default async function Home() {
     { icon: PencilRuler, title: t('service5Title'), desc: t('service5Desc') },
     { icon: Globe,       title: t('service6Title'), desc: t('service6Desc') },
   ];
-  const [categories, products, posts] = await Promise.all([
+  const [categories, products, posts, slide1, slide2, slide3] = await Promise.all([
     getCategories(),
     getProducts(),
-    getPosts()
+    getPosts(),
+    getMedia('hero-slide-1', '/banner/scent-beads.jpg'),
+    getMedia('hero-slide-2', '/banner/coffee-cleaner.jpg'),
+    getMedia('hero-slide-3', '/banner/purple-bubble.jpg'),
   ]);
 
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
       {/* 1. Hero Carousel */}
-      <HeroCarousel />
+      <HeroCarousel mediaSlides={[slide1, slide2, slide3]} />
 
       {/* 2. Category Matrix (Dynamic from WooCommerce) */}
       <CategoryMatrix categories={categories} />

@@ -11,6 +11,7 @@ import ThemeCustomizer from "@/components/ThemeCustomizer";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 import { routing, isRtl } from "@/i18n/routing";
+import { getMedia } from "@/lib/site-media";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -48,6 +49,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const dir = isRtl(locale) ? "rtl" : "ltr";
+  const logoUrl = await getMedia("logo", "/bj/logo.png");
 
   return (
     <html
@@ -57,7 +59,7 @@ export default async function LocaleLayout({
     >
       <body className="text-brand-dark min-h-screen flex flex-col relative">
         <NextIntlClientProvider>
-          <Header />
+          <Header logoUrl={logoUrl} />
           <main className="flex-1 flex flex-col">{children}</main>
           <Footer />
           <WhatsAppBtn />

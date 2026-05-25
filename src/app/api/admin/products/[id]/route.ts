@@ -22,6 +22,7 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
   const body = await req.json();
   const {
     name, slug, shortDescription, description, images, categoryIds,
+    featured,
     nameFr, nameEs, nameAr,
     shortDescriptionFr, shortDescriptionEs, shortDescriptionAr,
     descriptionFr, descriptionEs, descriptionAr,
@@ -37,6 +38,7 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
       slug,
       shortDescription: shortDescription || '',
       description: description || '',
+      featured: !!featured,
       nameFr: nameFr || '',
       nameEs: nameEs || '',
       nameAr: nameAr || '',

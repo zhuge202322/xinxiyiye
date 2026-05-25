@@ -21,6 +21,7 @@ type Props = {
     slug: string;
     shortDescription: string;
     description: string;
+    featured?: boolean;
     images: ImageItem[];
     categoryIds: number[];
     translations?: {
@@ -41,6 +42,7 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
   const [slugTouched, setSlugTouched] = useState(!!initial?.slug);
   const [shortDescription, setShortDescription] = useState(initial?.shortDescription || '');
   const [description, setDescription] = useState(initial?.description || '');
+  const [featured, setFeatured] = useState(!!initial?.featured);
   const [images, setImages] = useState<ImageItem[]>(initial?.images || []);
   const [categoryIds, setCategoryIds] = useState<number[]>(initial?.categoryIds || []);
   const [nameI18n, setNameI18n] = useState<LocaleStrings>(initial?.translations?.name || EMPTY_LOCALE);
@@ -80,6 +82,7 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
           description,
           images,
           categoryIds,
+          featured,
           nameFr: nameI18n.fr, nameEs: nameI18n.es, nameAr: nameI18n.ar,
           shortDescriptionFr: shortDescI18n.fr,
           shortDescriptionEs: shortDescI18n.es,
@@ -168,6 +171,21 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
               <span className="text-sm text-slate-400">No categories yet.</span>
             )}
           </div>
+        </div>
+
+        <div className="pt-4 border-t border-slate-100">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={featured}
+              onChange={(e) => setFeatured(e.target.checked)}
+              className="w-4 h-4 rounded text-brand-primary border-slate-300 focus:ring-brand-primary/20"
+            />
+            <div>
+              <span className="text-sm font-bold text-slate-700 block">推荐产品 (Top Product)</span>
+              <span className="text-xs text-slate-500 block">勾选后该产品会显示在首页热门推荐 (Top Products) 区域</span>
+            </div>
+          </label>
         </div>
       </div>
 

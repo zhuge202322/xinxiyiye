@@ -1,15 +1,22 @@
 import { ArrowRight, Award, BadgeCheck, CheckCircle2, Factory, FlaskConical, Globe2, Headset, Leaf, Mail, PackageCheck, Phone, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
+import { getMedia } from "@/lib/site-media";
 
 export default async function LandingPage() {
   const t = await getTranslations('landingGoogle');
   const locale = await getLocale();
   const lp = `/${locale}`;
 
+  const logoLight = await getMedia('logo-light', '/logo.png');
+  const aboutVideo = await getMedia('about-video', '/bj/about.mp4');
+  const line1 = await getMedia('landing-line-1', '/bj/bubble.jpg');
+  const line2 = await getMedia('landing-line-2', '/bj/beads.jpg');
+  const line3 = await getMedia('landing-line-3', '/bj/coffee.jpg');
+
   const productLines = [
-    { title: t('line1Title'), desc: t('line1Desc'), image: '/bj/bubble.jpg' },
-    { title: t('line2Title'), desc: t('line2Desc'), image: '/bj/beads.jpg' },
-    { title: t('line3Title'), desc: t('line3Desc'), image: '/bj/coffee.jpg' },
+    { title: t('line1Title'), desc: t('line1Desc'), image: line1 },
+    { title: t('line2Title'), desc: t('line2Desc'), image: line2 },
+    { title: t('line3Title'), desc: t('line3Desc'), image: line3 },
   ];
   const proofPoints = [
     { value: '18+',  label: t('proof1') },
@@ -31,7 +38,7 @@ export default async function LandingPage() {
         <div className="relative max-w-[1440px] mx-auto px-4 lg:px-8 py-8">
           <div className="flex items-center justify-between mb-16">
             <a href={lp} className="inline-flex items-center bg-white rounded-2xl px-4 py-2 shadow-sm">
-              <img src="/logo.png" alt="Myklens" className="h-10 w-auto object-contain" />
+              <img src={logoLight} alt="Myklens" className="h-10 w-auto object-contain" />
             </a>
             <a href="https://wa.me/8618022153690" className="hidden sm:inline-flex items-center gap-2 bg-white text-brand-primary px-5 py-3 rounded-full font-extrabold shadow-sm hover:shadow-md transition">
               <Phone className="w-4 h-4" /> {t('whatsapp')}
@@ -69,7 +76,7 @@ export default async function LandingPage() {
 
             <div className="relative">
               <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-white bg-white aspect-[4/3]">
-                <video src="/bj/about.mp4" autoPlay muted loop playsInline className="w-full h-full object-cover" />
+                <video src={aboutVideo} autoPlay muted loop playsInline className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8 text-white">
                   <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-bold mb-4">

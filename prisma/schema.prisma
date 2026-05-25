@@ -40,6 +40,7 @@ model Product {
   descriptionEs      String         @default("")
   descriptionAr      String         @default("")
   sortOrder          Int            @default(0)
+  featured           Boolean        @default(false)
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
   images             ProductImage[]
@@ -75,6 +76,15 @@ model Post {
   date          DateTime @default(now())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model SiteMedia {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique     // e.g. "logo", "hero-slide-1", "page-header-bg"
+  label     String   @default("")
+  url       String                // current media URL (image or video)
+  kind      String   @default("image") // "image" | "video"
+  updatedAt DateTime @updatedAt
 }
 
 model AdminUser {

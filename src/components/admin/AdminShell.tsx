@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, FolderOpen, FileText, BarChart3, KeyRound, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, FolderOpen, FileText, BarChart3, KeyRound, Image, LogOut } from 'lucide-react';
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const NAV = [
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/categories', label: 'Categories', icon: FolderOpen },
   { href: '/admin/posts', label: 'Posts', icon: FileText },
+  { href: '/admin/media', label: 'Site Media', icon: Image },
   { href: '/admin/account', label: 'Account', icon: KeyRound },
 ];
 

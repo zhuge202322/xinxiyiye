@@ -41,7 +41,7 @@ const PRODUCT_NAV = [
 
 type LocaleKey = 'en' | 'fr' | 'es' | 'ar';
 
-export default function Header() {
+export default function Header({ logoUrl = '/bj/logo.png' }: { logoUrl?: string }) {
   const t = useTranslations();
   const locale = useLocale() as LocaleKey;
   const lp = `/${locale}`;
@@ -53,7 +53,7 @@ export default function Header() {
       <div className="max-w-[1440px] mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo only - no company name */}
         <a href={lp || '/'} className="flex items-center gap-2">
-          <img src="/bj/logo.png" alt="Myklens" className="h-10 md:h-12 w-auto object-contain" />
+          <img src={logoUrl} alt="Myklens" className="h-10 md:h-12 w-auto object-contain" />
         </a>
 
         {/* Desktop Nav */}

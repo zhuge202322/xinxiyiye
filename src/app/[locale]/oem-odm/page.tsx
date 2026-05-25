@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import CaseMarquee from "@/components/CaseMarquee";
 import { getTranslations, getLocale } from 'next-intl/server';
+import { getMedia } from "@/lib/site-media";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('oemOdm');
@@ -13,6 +14,7 @@ export default async function OemOdmPage() {
   const tc = await getTranslations('common');
   const locale = await getLocale();
   const lp = `/${locale}`;
+  const bgHeader = await getMedia('page-header-bg', '/bj/dp.webp');
 
   const RD_HIGHLIGHTS = [t('rd1'), t('rd2'), t('rd3'), t('rd4')];
   const CAPACITY_METRICS = [
@@ -49,7 +51,7 @@ export default async function OemOdmPage() {
 
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
-      <section className="relative py-20 md:py-32 bg-cover bg-center bg-no-repeat border-b border-gray-200" style={{ backgroundImage: "url('/bj/dp.webp')" }}>
+      <section className="relative py-20 md:py-32 bg-cover bg-center bg-no-repeat border-b border-gray-200" style={{ backgroundImage: `url('${bgHeader}')` }}>
         <div className="absolute inset-0 bg-white/40"></div>
         <div className="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-8 text-center">
           <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-brand-primary tracking-wide mb-6">

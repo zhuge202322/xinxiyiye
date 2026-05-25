@@ -37,6 +37,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           slug: product.slug,
           shortDescription: product.shortDescription,
           description: product.description,
+          featured: product.featured,
           images: product.images.map((img) => ({ src: img.src, alt: img.alt })),
           categoryIds: product.categories.map((c) => c.id),
           translations: {

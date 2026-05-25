@@ -8,13 +8,13 @@ type Slide =
   | { type: 'image'; src: string; alt: string; title?: string; subtitle?: string }
   | { type: 'video'; src: string; poster?: string; alt: string; title?: string; subtitle?: string };
 
-export default function HeroCarousel() {
+export default function HeroCarousel({ mediaSlides = [] }: { mediaSlides?: string[] }) {
   const t = useTranslations('hero');
   const locale = useLocale();
   const slides: Slide[] = [
-    { type: 'image', src: '/banner/scent-beads.jpg',   alt: 'Laundry Scent Beads',    title: t('slide1Title'), subtitle: t('slide1Subtitle') },
-    { type: 'image', src: '/banner/coffee-cleaner.jpg', alt: 'Coffee Maker Descaler', title: t('slide2Title'), subtitle: t('slide2Subtitle') },
-    { type: 'image', src: '/banner/purple-bubble.jpg', alt: 'Multi-purpose Cleaner',  title: t('slide3Title'), subtitle: t('slide3Subtitle') },
+    { type: 'image', src: mediaSlides[0] || '/banner/scent-beads.jpg',   alt: 'Laundry Scent Beads',    title: t('slide1Title'), subtitle: t('slide1Subtitle') },
+    { type: 'image', src: mediaSlides[1] || '/banner/coffee-cleaner.jpg', alt: 'Coffee Maker Descaler', title: t('slide2Title'), subtitle: t('slide2Subtitle') },
+    { type: 'image', src: mediaSlides[2] || '/banner/purple-bubble.jpg', alt: 'Multi-purpose Cleaner',  title: t('slide3Title'), subtitle: t('slide3Subtitle') },
   ];
   const [current, setCurrent] = useState(0);
   const [showQuote, setShowQuote] = useState(false);

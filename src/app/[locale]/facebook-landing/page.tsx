@@ -1,14 +1,21 @@
 import { BadgeCheck, CheckCircle2, Factory, FlaskConical, Leaf, Mail, MessageCircle, PackageCheck, Phone, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
+import { getMedia } from "@/lib/site-media";
 
 export default async function FacebookLandingPage() {
   const t = await getTranslations('landingFb');
   const locale = await getLocale();
   const lp = `/${locale}`;
+
+  const logoUrl = await getMedia('logo', '/bj/logo.png');
+  const slide1 = await getMedia('hero-slide-1', '/banner/scent-beads.jpg');
+  const slide3 = await getMedia('hero-slide-3', '/banner/purple-bubble.jpg');
+  const slide2 = await getMedia('hero-slide-2', '/banner/coffee-cleaner.jpg');
+
   const products = [
-    { name: t('product1Name'), text: t('product1Desc'), image: '/banner/scent-beads.jpg' },
-    { name: t('product2Name'), text: t('product2Desc'), image: '/banner/purple-bubble.jpg' },
-    { name: t('product3Name'), text: t('product3Desc'), image: '/banner/coffee-cleaner.jpg' },
+    { name: t('product1Name'), text: t('product1Desc'), image: slide1 },
+    { name: t('product2Name'), text: t('product2Desc'), image: slide3 },
+    { name: t('product3Name'), text: t('product3Desc'), image: slide2 },
   ];
   const steps = [t('step1'), t('step2'), t('step3'), t('step4')];
   return (
@@ -18,7 +25,7 @@ export default async function FacebookLandingPage() {
           <div className="mx-auto max-w-md sm:max-w-2xl md:max-w-3xl lg:max-w-5xl">
             <div className="mb-5 flex items-center justify-between">
               <a href={lp} className="rounded-2xl bg-white px-3 py-2 shadow-sm">
-                <img src="/bj/logo.png" alt="Myklens" className="h-8 w-auto" />
+                <img src={logoUrl} alt="Myklens" className="h-8 w-auto" />
               </a>
               <a href="https://wa.me/8618022153690" className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-extrabold text-brand-primary shadow-sm">
                 <MessageCircle className="h-4 w-4" /> {t('chat')}

@@ -1,6 +1,7 @@
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
 import { getCategoriesData } from "@/lib/cms";
+import { getMedia } from "@/lib/site-media";
 
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.02H7.9v-2.91h2.54V9.84c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.24.19 2.24.19v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.45 2.91h-2.33V22c4.78-.75 8.43-4.91 8.43-9.93Z"/></svg>
@@ -25,6 +26,7 @@ export default async function Footer() {
   const t = await getTranslations();
   const locale = await getLocale();
   const lp = `/${locale}`;
+  const logoUrl = await getMedia('logo', '/bj/logo.png');
 
   return (
     <footer className="bg-gray-900 text-gray-300 pt-20 pb-10">
@@ -34,7 +36,7 @@ export default async function Footer() {
           <div className="lg:col-span-2">
             <a href={lp} className="flex items-center gap-2 mb-6">
               <span className="inline-block bg-white rounded-lg px-4 py-2">
-                <img src="/bj/logo.png" alt="Myklens" className="h-8 w-auto object-contain" />
+                <img src={logoUrl} alt="Myklens" className="h-8 w-auto object-contain" />
               </span>
             </a>
             <p className="text-gray-400 mb-8 max-w-sm leading-relaxed">

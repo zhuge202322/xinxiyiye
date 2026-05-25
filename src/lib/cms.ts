@@ -30,6 +30,32 @@ export async function getProductsData(locale?: Locale) {
   return products.map((p) => formatProduct(p, loc));
 }
 
+export async function getFeaturedProductsData(locale?: Locale) {
+  const loc = await resolveLocale(locale);
+  // 先找设为热门的
+  let products = await prisma.product.findMany({
+    where: { featured: true },
+    orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
+    include: {
+      images: { orderBy: { sortOrder: 'asc' } },
+      categories: true,
+    },
+  });
+  
+  // 如果后台一个热门也没设，默认拿前 8 个
+  if (products.length === 0) {
+    products = await prisma.product.findMany({
+      orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
+      take: 8,
+      include: {
+        images: { orderBy: { sortOrder: 'asc' } },
+        categories: true,
+      },
+    });
+  }
+  return products.map((p) => formatProduct(p, loc));
+}
+
 export async function getProductBySlug(slug: string, locale?: Locale) {
   const loc = await resolveLocale(locale);
   const product = await prisma.product.findUnique({
