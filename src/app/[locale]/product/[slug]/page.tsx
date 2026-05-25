@@ -31,6 +31,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   const category = product.categories?.[0];
 
+  const translations = {
+    ratingLabel: t('ratingLabel'),
+    variationsTitle: t('variationsTitle') || 'Select Spec / Variation',
+    defaultVariation: t('defaultVariation') || 'Standard',
+    noShortDesc: t('noShortDesc'),
+    supportOem: t('supportOem'),
+    worldwide: t('worldwide'),
+    dedicatedRd: t('dedicatedRd'),
+  };
+
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
       
@@ -64,7 +74,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         )}
 
         {/* 产品信息首屏与多 SKU 选择（客户端联动组件） */}
-        <ProductDetailClient product={product} t={t} />
+        <ProductDetailClient product={product} translations={translations} />
 
         {/* 产品详细描述 Tab / 内容区 */}
         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">

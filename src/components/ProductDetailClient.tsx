@@ -30,10 +30,18 @@ type Product = {
 
 type Props = {
   product: Product;
-  t: (key: string) => string;
+  translations: {
+    ratingLabel: string;
+    variationsTitle: string;
+    defaultVariation: string;
+    noShortDesc: string;
+    supportOem: string;
+    worldwide: string;
+    dedicatedRd: string;
+  };
 };
 
-export default function ProductDetailClient({ product, t }: Props) {
+export default function ProductDetailClient({ product, translations }: Props) {
   const [selectedSku, setSelectedSku] = useState<SkuItem | null>(null);
 
   // 如果选定了变体，主图优先展示变体图，否则展示产品大图库
@@ -69,14 +77,14 @@ export default function ProductDetailClient({ product, t }: Props) {
               <Star key={i} className="w-4 h-4 text-brand-primary fill-current" />
             ))}
           </div>
-          <span className="text-brand-gray text-xs font-medium">{t('ratingLabel')}</span>
+          <span className="text-brand-gray text-xs font-medium">{translations.ratingLabel}</span>
         </div>
 
         {/* 1. 多 SKU / Variations 选择区域 (根据截图的实装效果) */}
         {product.skus && product.skus.length > 0 && (
           <div className="mb-8 bg-slate-50/50 p-6 rounded-2xl border border-gray-100">
             <h3 className="text-sm font-bold text-brand-dark mb-4 uppercase tracking-wider">
-              {t('variationsTitle') || 'Select Spec / Variation'}
+              {translations.variationsTitle}
             </h3>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -99,7 +107,7 @@ export default function ProductDetailClient({ product, t }: Props) {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-brand-dark block truncate max-w-[120px]">
-                    {t('defaultVariation') || 'Standard'}
+                    {translations.defaultVariation}
                   </span>
                   <span className="text-[10px] text-brand-gray font-medium mt-0.5 block">
                     {product.skus[0]?.size || ''}
@@ -146,7 +154,7 @@ export default function ProductDetailClient({ product, t }: Props) {
           </div>
         )}
 
-        <CollapsibleProductDescription html={product.short_description || `<p>${t('noShortDesc')}</p>`} />
+        <CollapsibleProductDescription html={product.short_description || `<p>${translations.noShortDesc}</p>`} />
 
         {/* 2. 联动后的询盘 Action 动作，点击后会将具体的 SkuName 传入弹窗 */}
         <ProductInquiryActions productName={displayName} />
@@ -154,15 +162,15 @@ export default function ProductDetailClient({ product, t }: Props) {
         <ul className="mt-8 space-y-3.5 border-t border-gray-100 pt-6 text-sm text-gray-500 font-medium">
           <li className="flex items-center">
             <Check className="w-4 h-4 text-brand-primary mr-3" />
-            {t('supportOem')}
+            {translations.supportOem}
           </li>
           <li className="flex items-center">
             <Check className="w-4 h-4 text-brand-primary mr-3" />
-            {t('worldwide')}
+            {translations.worldwide}
           </li>
           <li className="flex items-center">
             <Check className="w-4 h-4 text-brand-primary mr-3" />
-            {t('dedicatedRd')}
+            {translations.dedicatedRd}
           </li>
         </ul>
       </div>
