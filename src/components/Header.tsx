@@ -41,7 +41,22 @@ const PRODUCT_NAV = [
 
 type LocaleKey = 'en' | 'fr' | 'es' | 'ar';
 
-export default function Header({ logoUrl = '/bj/logo.png' }: { logoUrl?: string }) {
+type NavCategory = {
+  slug: string;
+  name: Record<LocaleKey, string>;
+  children: Array<{
+    slug: string;
+    name: Record<LocaleKey, string>;
+  }>;
+};
+
+export default function Header({
+  logoUrl = '/bj/logo.png',
+  categories = PRODUCT_NAV as any,
+}: {
+  logoUrl?: string;
+  categories?: any[];
+}) {
   const t = useTranslations();
   const locale = useLocale() as LocaleKey;
   const lp = `/${locale}`;
@@ -84,22 +99,22 @@ export default function Header({ logoUrl = '/bj/logo.png' }: { logoUrl?: string 
 
               <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <div className="max-w-[1440px] mx-auto px-4 lg:px-8 py-10 grid grid-cols-4 gap-8">
-                  {PRODUCT_NAV.map((cat) => (
+                  {categories.map((cat) => (
                     <div key={cat.slug} className="flex flex-col">
                       <a
                         href={`${lp}/shop?category=${cat.slug}`}
                         className="text-brand-dark font-extrabold text-base mb-4 pb-2 border-b border-gray-100 hover:text-brand-primary transition"
                       >
-                        {t(`categories.${cat.slug}` as any)}
+                        {cat.name[locale] || cat.name.en}
                       </a>
                       <ul className="space-y-3">
-                        {cat.children.map((sub) => (
+                        {cat.children.map((sub: any) => (
                           <li key={sub.slug}>
                             <a
                               href={`${lp}/product/${sub.slug}`}
                               className="text-gray-600 hover:text-brand-primary text-sm font-medium transition"
                             >
-                              {sub.name[locale]}
+                              {sub.name[locale] || sub.name.en}
                             </a>
                           </li>
                         ))}
@@ -176,22 +191,22 @@ export default function Header({ logoUrl = '/bj/logo.png' }: { logoUrl?: string 
               </button>
               {mobileProductsOpen && (
                 <div className="pl-4 pb-3 space-y-3">
-                  {PRODUCT_NAV.map((cat) => (
+                  {categories.map((cat) => (
                     <div key={cat.slug}>
                       <a
                         href={`${lp}/shop?category=${cat.slug}`}
                         className="block py-2 font-bold text-brand-primary text-sm"
                       >
-                        {t(`categories.${cat.slug}` as any)}
+                        {cat.name[locale] || cat.name.en}
                       </a>
                       <ul className="pl-3 space-y-1">
-                        {cat.children.map((sub) => (
+                        {cat.children.map((sub: any) => (
                           <li key={sub.slug}>
                             <a
                               href={`${lp}/product/${sub.slug}`}
                               className="block py-1.5 text-gray-600 text-sm"
                             >
-                              {sub.name[locale]}
+                              {sub.name[locale] || sub.name.en}
                             </a>
                           </li>
                         ))}
