@@ -56,23 +56,66 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ url: `/uploads/${finalFilename}` });
     } 
-    // B. 超大视频 Stream 传输直写分支：0 内存解析缓冲，彻底绕开 Next.js 的 10MB 请求体截断截流机制！
+    // B. 超大视频 Stream 传输直写分支（支持分片 Chunked 追加，彻底摧毁 Next.js 的 10MB 大小截断瓶颈！）
     else {
+      const uploadId = req.headers.get('x-upload-id');
+      const chunkIndex = req.headers.get('x-chunk-index');
+      const chunkTotal = req.headers.get('x-chunk-total');
+
       if (!req.body) {
         return NextResponse.json({ error: 'Empty body stream' }, { status: 400 });
       }
 
-      const nodeStream = Readable.fromWeb(req.body as any);
-      const writeStream = fs.createWriteStream(localPath);
+      // 如果有分片上传信息
+      if (uploadId && chunkIndex !== null && chunkTotal !== null) {
+        const cIndex = parseInt(chunkIndex, 10);
+        const cTotal = parseInt(chunkTotal, 10);
 
-      // 管道流式接收：字节直接源源不断从网口写入磁盘，永不超限
-      await pipeline(nodeStream, writeStream);
+        // 分片文件的临时中继路径，用 uploadId 作唯一标识
+        const chunkTempPath = path.join(UPLOAD_DIR, `temp-${uploadId}${safeExt}`);
 
-      // 打印审计，核对落盘后的实际物理字节长度
-      const stats = fs.statSync(localPath);
-      console.log(`[File Upload Audit] Mode: StreamPipe, Filename: ${filename}, Size: ${stats.size} bytes`);
+        // 直接读取这 2MB 极小片的二进制 Buffer，完全不触发 10MB 爆内存保护！
+        const arrayBuffer = await req.arrayBuffer();
+        const chunkBuf = Buffer.from(arrayBuffer);
 
-      return NextResponse.json({ url: `/uploads/${filename}` });
+        // 如果是第一片，重置并创建新文件；否则，以二进制流直接追加在文件尾部
+        if (cIndex === 0) {
+          fs.writeFileSync(chunkTempPath, chunkBuf);
+        } else {
+          fs.appendFileSync(chunkTempPath, chunkBuf);
+        }
+
+        // 打印分片写入审计日志
+        console.log(`[File Upload Audit] Chunked Upload - ID: ${uploadId}, Part: ${cIndex + 1}/${cTotal}, Size: ${chunkBuf.length} bytes`);
+
+        // 如果是最后一片，表示上传合并已完全闭合！
+        if (cIndex === cTotal - 1) {
+          const finalFilename = `${Date.now()}-${hash}${safeExt}`;
+          const finalPath = path.join(UPLOAD_DIR, finalFilename);
+
+          // 瞬间秒级更名，大功告成！
+          fs.renameSync(chunkTempPath, finalPath);
+          const finalStats = fs.statSync(finalPath);
+
+          console.log(`[File Upload Audit] Chunked Success - Combined Filename: ${finalFilename}, Final Size: ${finalStats.size} bytes`);
+          return NextResponse.json({ url: `/uploads/${finalFilename}` });
+        }
+
+        // 还没完结，返回当前片写入成功的标志
+        return NextResponse.json({ success: true, part: cIndex });
+      } 
+      // 降级：普通的整体视频上传模式（如果文件小于 2MB 会直接全量 Pipe 直写落盘）
+      else {
+        const nodeStream = Readable.fromWeb(req.body as any);
+        const writeStream = fs.createWriteStream(localPath);
+
+        await pipeline(nodeStream, writeStream);
+
+        const stats = fs.statSync(localPath);
+        console.log(`[File Upload Audit] Mode: DirectPipe, Filename: ${filename}, Size: ${stats.size} bytes`);
+
+        return NextResponse.json({ url: `/uploads/${filename}` });
+      }
     }
   } catch (error: any) {
     console.error('Upload Error Details:', error);

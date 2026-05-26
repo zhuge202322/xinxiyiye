@@ -14,29 +14,58 @@ export default function MediaUploader({ value, onChange, label, kind = 'image' }
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
 
+  const [progressText, setProgressText] = useState('');
+
   async function upload(file: File) {
     setBusy(true);
+    setProgressText('Preparing...');
     try {
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/octet-stream', // 声明纯二进制，完全绕过任何框架高层 JSON / FormData 解码器
-          'x-filename': encodeURIComponent(file.name),
-        },
-        body: file, // 直接投递原始文件，0 字节损耗，支持数 GB 超大文件而完全不卡网页！
-      });
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        alert(`Upload failed: ${errData.error || res.statusText || 'Unknown server error'}`);
-        return;
+      const CHUNK_SIZE = 2 * 1024 * 1024; // 2MB 一个切片，远远低于 10MB 的限制，100% 安全
+      const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+      const uploadId = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+      let uploadedUrl = '';
+
+      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+        const start = chunkIndex * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, file.size);
+        const chunkBlob = file.slice(start, end);
+
+        setProgressText(`Uploading: ${Math.round((chunkIndex / totalChunks) * 100)}% (${chunkIndex + 1}/${totalChunks})`);
+
+        const res = await fetch('/api/admin/upload', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'x-filename': encodeURIComponent(file.name),
+            'x-upload-id': uploadId,
+            'x-chunk-index': chunkIndex.toString(),
+            'x-chunk-total': totalChunks.toString(),
+          },
+          body: chunkBlob,
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          alert(`Upload failed at chunk ${chunkIndex + 1}: ${errData.error || res.statusText || 'Unknown error'}`);
+          return;
+        }
+
+        const data = await res.json();
+        if (data.url) {
+          uploadedUrl = data.url;
+        }
       }
-      const { url } = await res.json();
-      onChange(url);
+
+      setProgressText('Success!');
+      if (uploadedUrl) {
+        onChange(uploadedUrl);
+      }
     } catch (e: any) {
       console.error(e);
       alert(`Upload error: ${e.message || 'connection failed'}`);
     } finally {
       setBusy(false);
+      setProgressText('');
     }
   }
 
@@ -68,7 +97,7 @@ export default function MediaUploader({ value, onChange, label, kind = 'image' }
             onClick={() => inputRef.current?.click()}
             className="inline-flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 disabled:opacity-50"
           >
-            <Upload className="w-4 h-4" /> {busy ? 'Uploading...' : isVideo ? 'Upload Video' : 'Upload Image'}
+            <Upload className="w-4 h-4" /> {busy ? (progressText || 'Uploading...') : isVideo ? 'Upload Video' : 'Upload Image'}
           </button>
           {value && (
             <button
