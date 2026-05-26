@@ -68,13 +68,21 @@ export function formatProduct(p: any, locale: Locale = 'en'): any {
       name: pick(c.name, c.nameFr || '', c.nameEs || '', c.nameAr || '', locale),
       slug: c.slug,
     })),
-    skus: (p.skus || []).map((s: any) => ({
-      id: s.id,
-      name: pick(s.name, s.nameFr || '', s.nameEs || '', s.nameAr || '', locale),
-      image: s.image,
-      price: s.price || '',
-      size: s.size || '',
-    })),
+    skus: (p.skus || []).map((s: any) => {
+      const skuImages = s.images?.length
+        ? s.images.map((img: any) => ({ id: img.id, src: img.src, alt: s.name }))
+        : s.image
+        ? [{ id: -1, src: s.image, alt: s.name }]
+        : [];
+      return {
+        id: s.id,
+        name: pick(s.name, s.nameFr || '', s.nameEs || '', s.nameAr || '', locale),
+        image: s.image,
+        images: skuImages,
+        price: s.price || '',
+        size: s.size || '',
+      };
+    }),
   };
 }
 

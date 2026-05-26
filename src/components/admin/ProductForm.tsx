@@ -22,6 +22,7 @@ export type SkuItem = {
   nameEs?: string;
   nameAr?: string;
   image: string;
+  images?: ImageItem[];
   price?: string;
   size?: string;
 };
@@ -100,6 +101,7 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
         nameEs: '',
         nameAr: '',
         image: '',
+        images: [],
         price: '',
         size: '',
       },
@@ -110,7 +112,7 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
     setSkus((prev) => prev.filter((s) => s.tempId !== tempId));
   }
 
-  function updateSku(tempId: string, key: keyof SkuItem, val: string) {
+  function updateSku(tempId: string, key: keyof SkuItem, val: any) {
     setSkus((prev) =>
       prev.map((s) => (s.tempId === tempId ? { ...s, [key]: val } : s))
     );
@@ -141,7 +143,8 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
             nameFr: s.nameFr || '',
             nameEs: s.nameEs || '',
             nameAr: s.nameAr || '',
-            image: s.image,
+            image: s.images?.length ? s.images[0].src : (s.image || ''),
+            images: s.images?.map((img: any) => img.src) || [],
             price: s.price || '',
             size: s.size || '',
           })),
@@ -288,29 +291,32 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
             {skus.map((sku, index) => (
               <div
                 key={sku.tempId}
-                className="relative border border-slate-200 rounded-2xl p-5 bg-slate-50/50 hover:bg-slate-50 transition grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6"
+                className="relative border border-slate-200 rounded-2xl p-6 bg-slate-50/50 hover:bg-slate-50 transition space-y-6"
               >
-                {/* 变体图上传 */}
-                <div className="flex flex-col items-center justify-center bg-white border border-slate-200 rounded-xl p-3 shadow-sm h-full min-h-[160px]">
-                  <ImageUploader
-                    value={sku.image}
-                    onChange={(url) => updateSku(sku.tempId!, 'image', url || '')}
+                {/* 变体详情删除按钮 */}
+                <button
+                  type="button"
+                  onClick={() => removeSku(sku.tempId!)}
+                  className="absolute top-4 right-4 p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition z-10"
+                  title="删除该规格变体"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+
+                {/* 变体多张图片画廊上传 */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+                  <span className="text-xs text-slate-600 font-extrabold uppercase tracking-wide flex items-center gap-1.5">
+                    <Layers className="w-4 h-4 text-brand-primary" /> 变体图片画廊 (支持上传多张并拖拽排序) *
+                  </span>
+                  <MultiImageUploader
+                    value={sku.images || []}
+                    onChange={(imgList) => updateSku(sku.tempId!, 'images', imgList)}
                   />
-                  <span className="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-wide">变体主图 *</span>
                 </div>
 
                 {/* 变体详情填写 */}
-                <div className="space-y-4 relative">
-                  <button
-                    type="button"
-                    onClick={() => removeSku(sku.tempId!)}
-                    className="absolute top-0 right-0 p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
-                    title="删除该规格变体"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 pr-8">
+                <div className="space-y-4 relative pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div>
                       <label className="block text-xs font-bold text-slate-600 mb-1">变体名称 (英文 / 默认) *</label>
                       <input

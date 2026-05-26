@@ -73,9 +73,17 @@ export async function POST(req: NextRequest) {
               nameFr: s.nameFr || '',
               nameEs: s.nameEs || '',
               nameAr: s.nameAr || '',
-              image: s.image,
+              image: s.images?.length ? (typeof s.images[0] === 'string' ? s.images[0] : s.images[0].src) : (s.image || ''),
               price: s.price || '',
               size: s.size || '',
+              images: s.images?.length
+                ? {
+                    create: s.images.map((img: any, idx: number) => ({
+                      src: typeof img === 'string' ? img : img.src,
+                      sortOrder: idx,
+                    })),
+                  }
+                : undefined,
             })),
           }
         : undefined,

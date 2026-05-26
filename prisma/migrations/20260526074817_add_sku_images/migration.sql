@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "ProductSkuImage" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "src" TEXT NOT NULL,
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "skuId" INTEGER NOT NULL,
+    CONSTRAINT "ProductSkuImage_skuId_fkey" FOREIGN KEY ("skuId") REFERENCES "ProductSku" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

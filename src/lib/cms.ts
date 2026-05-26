@@ -25,7 +25,7 @@ export async function getProductsData(locale?: Locale) {
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       categories: true,
-      skus: true,
+      skus: { include: { images: { orderBy: { sortOrder: 'asc' } } } },
     },
   });
   return products.map((p) => formatProduct(p, loc));
@@ -40,7 +40,7 @@ export async function getFeaturedProductsData(locale?: Locale) {
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       categories: true,
-      skus: true,
+      skus: { include: { images: { orderBy: { sortOrder: 'asc' } } } },
     },
   });
   
@@ -52,7 +52,7 @@ export async function getFeaturedProductsData(locale?: Locale) {
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
         categories: true,
-        skus: true,
+        skus: { include: { images: { orderBy: { sortOrder: 'asc' } } } },
       },
     });
   }
@@ -66,7 +66,7 @@ export async function getProductBySlug(slug: string, locale?: Locale) {
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       categories: true,
-      skus: true,
+      skus: { include: { images: { orderBy: { sortOrder: 'asc' } } } },
     },
   });
   return product ? formatProduct(product, loc) : null;

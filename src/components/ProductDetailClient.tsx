@@ -16,6 +16,7 @@ type SkuItem = {
   id: number;
   name: string;
   image: string;
+  images?: ImageItem[];
   price?: string;
   size?: string;
 };
@@ -52,12 +53,14 @@ export default function ProductDetailClient({ product, translations }: Props) {
   const [selectedSku, setSelectedSku] = useState<SkuItem | null>(null);
   const [activeTab, setActiveTab] = useState<'details' | 'specs' | 'formula'>('details');
 
-  // 如果选定了变体，主图优先展示变体图，否则展示产品大图库
+  // 当点击不同的 SKU 时，切换对应 SKU 的主图和轮播图画廊
   const mainImages = selectedSku 
-    ? [{ id: -1, src: selectedSku.image, alt: selectedSku.name }, ...product.images]
+    ? (selectedSku.images && selectedSku.images.length > 0
+        ? selectedSku.images
+        : [{ id: -1, src: selectedSku.image, alt: selectedSku.name }, ...product.images])
     : product.images;
 
-  // 联动后的显示名字
+  // 联动显示选中 SKU 的具体名称
   const displayName = selectedSku 
     ? `${product.name} - ${selectedSku.name}`
     : product.name;
@@ -77,7 +80,7 @@ export default function ProductDetailClient({ product, translations }: Props) {
       <div className="w-full lg:w-1/2 flex flex-col justify-center">
         
         <h1 className="text-4xl md:text-5xl font-extrabold text-brand-dark mb-4 leading-tight">
-          {product.name}
+          {displayName}
         </h1>
 
         <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">

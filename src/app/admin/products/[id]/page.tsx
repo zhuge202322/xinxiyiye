@@ -50,6 +50,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
             nameEs: s.nameEs || '',
             nameAr: s.nameAr || '',
             image: s.image,
+            images: (s.images || []).map((img: any) => ({ src: img.src, alt: s.name })),
             price: s.price || '',
             size: s.size || '',
           })) || [],
