@@ -13,24 +13,24 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. 获取 Base64 JSON 载荷
-    const { filename: originalName, content } = await req.json();
-    
-    if (!content) {
-      return NextResponse.json({ error: 'No file content received' }, { status: 400 });
-    }
-
-    const ext = path.extname(originalName || 'upload.bin') || '.bin';
+    // 1. 获取纯二进制 Raw Header
+    const xFilename = req.headers.get('x-filename');
+    const originalName = xFilename ? decodeURIComponent(xFilename) : 'upload.bin';
+    const ext = path.extname(originalName) || '.bin';
     const safeExt = ext.toLowerCase().replace(/[^.a-z0-9]/g, '');
 
     const hash = crypto.randomBytes(8).toString('hex');
     const filename = `${Date.now()}-${hash}${safeExt}`;
     const localPath = path.join(UPLOAD_DIR, filename);
 
-    // 2. 利用 Node.js 原生的 Buffer base64 还原器一键、无偏差地解码还原二进制
-    const buf = Buffer.from(content, 'base64');
+    // 2. 一步到位！直接提取纯净的原始 arrayBuffer，零多余封装，100% 字节对齐
+    const arrayBuffer = await req.arrayBuffer();
+    const buf = Buffer.from(arrayBuffer);
 
-    // 3. 落盘写入，100% 字节完美对齐、永不损坏
+    // 打印磁盘写入安全审计信息
+    console.log(`[File Upload Audit] Filename: ${filename}, Size: ${buf.length} bytes, Path: ${localPath}`);
+
+    // 3. 原生写入本地磁盘
     fs.writeFileSync(localPath, buf);
 
     const url = `/uploads/${filename}`;
