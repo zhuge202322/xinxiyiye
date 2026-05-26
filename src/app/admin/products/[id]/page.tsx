@@ -15,7 +15,11 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
         categories: true,
-        skus: true,
+        skus: {
+          include: {
+            images: { orderBy: { sortOrder: 'asc' } }, // 完美修复：在加载 SKU 变体时同步查出关联的多图数据，保证编辑时回显成功！
+          },
+        },
       },
     }),
     prisma.category.findMany({
