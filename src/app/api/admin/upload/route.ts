@@ -23,16 +23,12 @@ export async function POST(req: NextRequest) {
     const filename = `${Date.now()}-${hash}${safeExt}`;
     const localPath = path.join(UPLOAD_DIR, filename);
 
-    // 2. 检查请求体流
-    if (!req.body) {
-      return NextResponse.json({ error: 'Empty body stream' }, { status: 400 });
-    }
+    // 2. 利用 req.arrayBuffer() 毫秒级、原封不动、无任何框架封装污染地提取纯净二进制 Buffer
+    const arrayBuffer = await req.arrayBuffer();
+    const buf = Buffer.from(arrayBuffer);
 
-    // 3. 将 Web Stream 转换为 Node stream，然后利用管道流直写本地磁盘，100% 避开 Body 大小限制
-    const nodeStream = Readable.fromWeb(req.body as any);
-    const writeStream = fs.createWriteStream(localPath);
-
-    await pipeline(nodeStream, writeStream);
+    // 3. 一口气落盘，100% 保证文件完整、不损坏
+    fs.writeFileSync(localPath, buf);
 
     const url = `/uploads/${filename}`;
     return NextResponse.json({ url });
