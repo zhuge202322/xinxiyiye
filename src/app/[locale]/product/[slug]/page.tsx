@@ -39,13 +39,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     supportOem: t('supportOem'),
     worldwide: t('worldwide'),
     dedicatedRd: t('dedicatedRd'),
+    tabDetails: t('tabDetails') || 'Product Details',
+    tabSpecs: t('tabSpecs') || 'Specs & Packaging',
+    tabFormula: t('tabFormula') || 'Formula & MSDS',
+    noDetailedDesc: t('noDetailedDesc') || 'No detailed description available.',
+    description: product.description || '',
+    specs: (product as any).specs || '',
+    formula: (product as any).formula || '',
   };
 
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
       
 
-      {/* 面包屑 */}
+      {/* 面包�?*/}
       <div className="bg-brand-secondary py-6 border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
           <p className="text-brand-gray font-medium flex items-center text-sm">
@@ -64,7 +71,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      {/* 产品详情主区域 */}
+      {/* 产品详情主区�?*/}
       <main className="flex-1 max-w-[1440px] mx-auto px-4 lg:px-8 py-16 w-full">
         
         {category && (
@@ -73,51 +80,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </a>
         )}
 
-        {/* 产品信息首屏与多 SKU 选择（客户端联动组件） */}
+        {/* 产品全套详情、多 SKU 联动�?Specs/Formula 三大 Tab 联动管理客户端组�?*/}
         <ProductDetailClient product={product} translations={translations} />
-
-        {/* 产品详细描述 Tab / 内容区 */}
-        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-          <div className="flex border-b border-gray-100 bg-gray-50 px-8 pt-8 gap-8">
-            <button className="pb-4 font-bold text-brand-primary border-b-4 border-brand-primary text-lg">
-              {t('tabDetails')}
-            </button>
-            <button className="pb-4 font-medium text-gray-400 hover:text-brand-dark transition text-lg border-b-4 border-transparent">
-              {t('tabSpecs')}
-            </button>
-            <button className="pb-4 font-medium text-gray-400 hover:text-brand-dark transition text-lg border-b-4 border-transparent">
-              {t('tabFormula')}
-            </button>
-          </div>
-          <div className="p-8 md:p-16">
-            <div 
-              className="
-                prose prose-lg prose-brand max-w-none text-gray-600 
-                prose-headings:text-brand-dark prose-headings:font-bold
-                prose-a:text-brand-primary
-                
-                /* 表格样式定制 - 实现截图中的虚线表格效果 */
-                prose-table:w-full prose-table:border-collapse
-                prose-td:border prose-td:border-dashed prose-td:border-gray-300 prose-td:p-3 prose-td:text-base
-                prose-th:border prose-th:border-dashed prose-th:border-gray-300 prose-th:p-3 prose-th:text-left prose-th:bg-gray-50 prose-th:text-brand-dark
-                
-                /* 图片样式定制 - 保持图片原始大小，不要强制拉伸导致模糊 */
-                prose-img:rounded-2xl prose-img:shadow-sm prose-img:mx-auto prose-img:my-8 prose-img:max-w-full
-                
-                /* 段落样式定制 */
-                prose-p:leading-relaxed prose-p:mb-6
-                
-                /* 加粗文字 */
-                prose-strong:text-brand-dark prose-strong:font-extrabold
-              "
-              dangerouslySetInnerHTML={{ __html: product.description || `<p>${t('noDetailedDesc')}</p>` }}
-            />
-          </div>
-        </div>
-
       </main>
-
-      
     </div>
   );
 }

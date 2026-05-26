@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
     nameFr, nameEs, nameAr,
     shortDescriptionFr, shortDescriptionEs, shortDescriptionAr,
     descriptionFr, descriptionEs, descriptionAr,
+    specs, specsFr, specsEs, specsAr,
+    formula, formulaFr, formulaEs, formulaAr,
   } = body;
 
   if (!name || !slug) {
@@ -44,6 +46,14 @@ export async function POST(req: NextRequest) {
       descriptionFr: descriptionFr || '',
       descriptionEs: descriptionEs || '',
       descriptionAr: descriptionAr || '',
+      specs: specs || '',
+      specsFr: specsFr || '',
+      specsEs: specsEs || '',
+      specsAr: specsAr || '',
+      formula: formula || '',
+      formulaFr: formulaFr || '',
+      formulaEs: formulaEs || '',
+      formulaAr: formulaAr || '',
       categories: categoryIds?.length
         ? { connect: categoryIds.map((id: number) => ({ id })) }
         : undefined,

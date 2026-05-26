@@ -44,6 +44,20 @@ export function formatProduct(p: any, locale: Locale = 'en'): any {
       p.descriptionAr || '',
       locale,
     ),
+    specs: pick(
+      p.specs || '',
+      p.specsFr || '',
+      p.specsEs || '',
+      p.specsAr || '',
+      locale,
+    ),
+    formula: pick(
+      p.formula || '',
+      p.formulaFr || '',
+      p.formulaEs || '',
+      p.formulaAr || '',
+      locale,
+    ),
     images: (p.images || []).map((img: any) => ({
       id: img.id,
       src: img.src,

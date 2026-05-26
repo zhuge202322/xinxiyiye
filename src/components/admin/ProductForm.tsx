@@ -34,6 +34,8 @@ type Props = {
     slug: string;
     shortDescription: string;
     description: string;
+    specs?: string;
+    formula?: string;
     featured?: boolean;
     images: ImageItem[];
     categoryIds: number[];
@@ -42,6 +44,8 @@ type Props = {
       name: LocaleStrings;
       shortDescription: LocaleStrings;
       description: LocaleStrings;
+      specs?: LocaleStrings;
+      formula?: LocaleStrings;
     };
   };
   categories: Category[];
@@ -56,6 +60,8 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
   const [slugTouched, setSlugTouched] = useState(!!initial?.slug);
   const [shortDescription, setShortDescription] = useState(initial?.shortDescription || '');
   const [description, setDescription] = useState(initial?.description || '');
+  const [specs, setSpecs] = useState((initial as any)?.specs || '');
+  const [formula, setFormula] = useState((initial as any)?.formula || '');
   const [featured, setFeatured] = useState(!!initial?.featured);
   const [images, setImages] = useState<ImageItem[]>(initial?.images || []);
   const [categoryIds, setCategoryIds] = useState<number[]>(initial?.categoryIds || []);
@@ -65,6 +71,8 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
   const [nameI18n, setNameI18n] = useState<LocaleStrings>(initial?.translations?.name || EMPTY_LOCALE);
   const [shortDescI18n, setShortDescI18n] = useState<LocaleStrings>(initial?.translations?.shortDescription || EMPTY_LOCALE);
   const [descI18n, setDescI18n] = useState<LocaleStrings>(initial?.translations?.description || EMPTY_LOCALE);
+  const [specsI18n, setSpecsI18n] = useState<LocaleStrings>((initial?.translations as any)?.specs || EMPTY_LOCALE);
+  const [formulaI18n, setFormulaI18n] = useState<LocaleStrings>((initial?.translations as any)?.formula || EMPTY_LOCALE);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -123,6 +131,8 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
           slug,
           shortDescription,
           description,
+          specs,
+          formula,
           images,
           categoryIds,
           featured,
@@ -142,6 +152,12 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
           descriptionFr: descI18n.fr,
           descriptionEs: descI18n.es,
           descriptionAr: descI18n.ar,
+          specsFr: specsI18n.fr,
+          specsEs: specsI18n.es,
+          specsAr: specsI18n.ar,
+          formulaFr: formulaI18n.fr,
+          formulaEs: formulaI18n.es,
+          formulaAr: formulaI18n.ar,
         }),
       });
       if (!res.ok) {
@@ -375,6 +391,16 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
         <RichEditor value={description} onChange={setDescription} minHeight={400} />
       </div>
 
+      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+        <h3 className="text-sm font-bold text-slate-700 mb-3">Specs & Packaging (English / Default)</h3>
+        <RichEditor value={specs} onChange={setSpecs} minHeight={300} />
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+        <h3 className="text-sm font-bold text-slate-700 mb-3">Formula & MSDS (English / Default)</h3>
+        <RichEditor value={formula} onChange={setFormula} minHeight={300} />
+      </div>
+
       <TranslationTabs title="Translations (Product)">
         {(locale, isRtl) => (
           <>
@@ -405,6 +431,24 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
                 value={descI18n[locale]}
                 onChange={(v) => setLocale(setDescI18n, descI18n)(locale, v)}
                 minHeight={300}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Specs & Packaging ({locale})</label>
+              <RichEditor
+                key={`specs-${locale}`}
+                value={specsI18n[locale]}
+                onChange={(v) => setLocale(setSpecsI18n, specsI18n)(locale, v)}
+                minHeight={200}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Formula & MSDS ({locale})</label>
+              <RichEditor
+                key={`formula-${locale}`}
+                value={formulaI18n[locale]}
+                onChange={(v) => setLocale(setFormulaI18n, formulaI18n)(locale, v)}
+                minHeight={200}
               />
             </div>
           </>

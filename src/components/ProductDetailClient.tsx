@@ -38,11 +38,19 @@ type Props = {
     supportOem: string;
     worldwide: string;
     dedicatedRd: string;
+    tabDetails: string;
+    tabSpecs: string;
+    tabFormula: string;
+    noDetailedDesc: string;
+    description: string;
+    specs: string;
+    formula: string;
   };
 };
 
 export default function ProductDetailClient({ product, translations }: Props) {
   const [selectedSku, setSelectedSku] = useState<SkuItem | null>(null);
+  const [activeTab, setActiveTab] = useState<'details' | 'specs' | 'formula'>('details');
 
   // 如果选定了变体，主图优先展示变体图，否则展示产品大图库
   const mainImages = selectedSku 
@@ -55,7 +63,8 @@ export default function ProductDetailClient({ product, translations }: Props) {
     : product.name;
 
   return (
-    <div className="bg-white rounded-[2rem] p-8 md:p-12 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-16 mb-16">
+    <div className="space-y-16 w-full">
+      <div className="bg-white rounded-[2rem] p-8 md:p-12 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-16 w-full">
       
       {/* 左侧：画廊展示（传入整合变体后的主图列表） */}
       <ProductGallery 
@@ -173,6 +182,77 @@ export default function ProductDetailClient({ product, translations }: Props) {
             {translations.dedicatedRd}
           </li>
         </ul>
+      </div></div>
+
+      {/* 模块二：产品详细描述三大 Tab / 内容区 */}
+      <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden w-full">
+        <div className="flex border-b border-gray-100 bg-gray-50 px-8 pt-8 gap-8 flex-wrap">
+          <button
+            type="button"
+            onClick={() => setActiveTab('details')}
+            className={`pb-4 font-bold text-lg border-b-4 transition ${
+              activeTab === 'details'
+                ? 'text-brand-primary border-brand-primary'
+                : 'text-gray-400 border-transparent hover:text-brand-dark'
+            }`}
+          >
+            {translations.tabDetails}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('specs')}
+            className={`pb-4 font-bold text-lg border-b-4 transition ${
+              activeTab === 'specs'
+                ? 'text-brand-primary border-brand-primary'
+                : 'text-gray-400 border-transparent hover:text-brand-dark'
+            }`}
+          >
+            {translations.tabSpecs}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('formula')}
+            className={`pb-4 font-bold text-lg border-b-4 transition ${
+              activeTab === 'formula'
+                ? 'text-brand-primary border-brand-primary'
+                : 'text-gray-400 border-transparent hover:text-brand-dark'
+            }`}
+          >
+            {translations.tabFormula}
+          </button>
+        </div>
+
+        <div className="p-8 md:p-16">
+          <div
+            className="
+              prose prose-lg prose-brand max-w-none text-gray-600 
+              prose-headings:text-brand-dark prose-headings:font-bold
+              prose-a:text-brand-primary
+              
+              /* 表格样式定制 - 实现截图中的虚线表格效果 */
+              prose-table:w-full prose-table:border-collapse prose-table:my-6
+              prose-td:border prose-td:border-dashed prose-td:border-gray-300 prose-td:p-3.5 prose-td:text-base
+              prose-th:border prose-th:border-dashed prose-th:border-gray-300 prose-th:p-3.5 prose-th:text-left prose-th:bg-gray-50 prose-th:text-brand-dark prose-th:font-extrabold
+              
+              /* 图片样式定制 - 保持图片原始大小，不要强制拉伸导致模糊 */
+              prose-img:rounded-2xl prose-img:shadow-sm prose-img:mx-auto prose-img:my-8 prose-img:max-w-full
+              
+              /* 段落样式定制 */
+              prose-p:leading-relaxed prose-p:mb-6
+              
+              /* 加粗文字 */
+              prose-strong:text-brand-dark prose-strong:font-extrabold
+            "
+            dangerouslySetInnerHTML={{
+              __html:
+                activeTab === 'details'
+                  ? translations.description || `<p>${translations.noDetailedDesc}</p>`
+                  : activeTab === 'specs'
+                  ? translations.specs || `<p>No specifications and packaging information available.</p>`
+                  : translations.formula || `<p>No chemical formula and safety MSDS information available.</p>`
+            }}
+          />
+        </div>
       </div>
     </div>
   );
