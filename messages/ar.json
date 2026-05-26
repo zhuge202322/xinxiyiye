@@ -148,7 +148,9 @@
     "tabSpecs": "المواصفات والتعبئة",
     "tabFormula": "التركيبة و MSDS",
     "noShortDesc": "لا يوجد وصف قصير.",
-    "noDetailedDesc": "لا يوجد وصف مفصل."
+    "noDetailedDesc": "لا يوجد وصف مفصل.",
+    "variationsTitle": "حدد مواصفات / التباين",
+    "defaultVariation": "افتراضي"
   },
   "about": {
     "title": "عن Myklens",

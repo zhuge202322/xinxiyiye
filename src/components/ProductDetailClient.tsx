@@ -96,7 +96,9 @@ export default function ProductDetailClient({ product, translations }: Props) {
         {product.skus && product.skus.length > 0 && (
           <div className="mb-8 bg-slate-50/50 p-6 rounded-2xl border border-gray-100">
             <h3 className="text-sm font-bold text-brand-dark mb-4 uppercase tracking-wider">
-              {translations.variationsTitle}
+              {translations.variationsTitle && !translations.variationsTitle.includes('.')
+                ? translations.variationsTitle
+                : 'Select Spec / Variation'}
             </h3>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -119,7 +121,9 @@ export default function ProductDetailClient({ product, translations }: Props) {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-brand-dark block truncate max-w-[120px]">
-                    {translations.defaultVariation}
+                    {translations.defaultVariation && !translations.defaultVariation.includes('.')
+                      ? translations.defaultVariation
+                      : 'Standard'}
                   </span>
                   <span className="text-[10px] text-brand-gray font-medium mt-0.5 block">
                     {product.skus[0]?.size || ''}

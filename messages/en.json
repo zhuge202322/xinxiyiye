@@ -148,7 +148,9 @@
     "tabSpecs": "Specs & Packaging",
     "tabFormula": "Formula & MSDS",
     "noShortDesc": "No short description.",
-    "noDetailedDesc": "No detailed description."
+    "noDetailedDesc": "No detailed description.",
+    "variationsTitle": "Select Spec / Variation",
+    "defaultVariation": "Standard"
   },
   "about": {
     "title": "About Myklens",
