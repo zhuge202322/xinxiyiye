@@ -13,9 +13,33 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. 获取纯二进制 Raw Header
-    const xFilename = req.headers.get('x-filename');
-    const originalName = xFilename ? decodeURIComponent(xFilename) : 'upload.bin';
+    const contentType = req.headers.get('content-type') || '';
+    let buf: Buffer;
+    let originalName = 'upload.bin';
+
+    // A. 智能分流：如果是标准的 FormData 上传（用于全站图片、SKU图片组件）
+    if (contentType.includes('multipart/form-data')) {
+      const form = await req.formData();
+      const file = form.get('file');
+
+      if (!file || !(file instanceof Blob)) {
+        return NextResponse.json({ error: 'No file found in formData' }, { status: 400 });
+      }
+
+      originalName = (file as any).name || 'upload.png';
+      const arrayBuffer = await file.arrayBuffer();
+      buf = Buffer.from(arrayBuffer);
+    } 
+    // B. 智能分流：如果是纯二进制原始字节流上传（用于视频的大文件直传组件）
+    else {
+      const xFilename = req.headers.get('x-filename');
+      originalName = xFilename ? decodeURIComponent(xFilename) : 'upload.bin';
+      
+      const arrayBuffer = await req.arrayBuffer();
+      buf = Buffer.from(arrayBuffer);
+    }
+
+    // 2. 物理保存文件并自动哈希命名
     const ext = path.extname(originalName) || '.bin';
     const safeExt = ext.toLowerCase().replace(/[^.a-z0-9]/g, '');
 
@@ -23,14 +47,10 @@ export async function POST(req: NextRequest) {
     const filename = `${Date.now()}-${hash}${safeExt}`;
     const localPath = path.join(UPLOAD_DIR, filename);
 
-    // 2. 一步到位！直接提取纯净的原始 arrayBuffer，零多余封装，100% 字节对齐
-    const arrayBuffer = await req.arrayBuffer();
-    const buf = Buffer.from(arrayBuffer);
+    // 打印并审计
+    console.log(`[File Upload Audit] Mode: ${contentType.includes('multipart/form-data') ? 'FormData' : 'RawStream'}, Filename: ${filename}, Size: ${buf.length} bytes`);
 
-    // 打印磁盘写入安全审计信息
-    console.log(`[File Upload Audit] Filename: ${filename}, Size: ${buf.length} bytes, Path: ${localPath}`);
-
-    // 3. 原生写入本地磁盘
+    // 写入物理硬盘
     fs.writeFileSync(localPath, buf);
 
     const url = `/uploads/${filename}`;
