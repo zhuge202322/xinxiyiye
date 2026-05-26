@@ -21,11 +21,15 @@ export default function MediaUploader({ value, onChange, label, kind = 'image' }
       fd.append('file', file);
       const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
       if (!res.ok) {
-        alert('Upload failed');
+        const errData = await res.json().catch(() => ({}));
+        alert(`Upload failed: ${errData.error || res.statusText || 'Unknown server error'}`);
         return;
       }
       const { url } = await res.json();
       onChange(url);
+    } catch (e: any) {
+      console.error(e);
+      alert(`Upload network error: ${e.message || 'connection failed'}`);
     } finally {
       setBusy(false);
     }
