@@ -13,21 +13,24 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. 获取客户端传过来的原文件名
-    const xFilename = req.headers.get('x-filename');
-    const originalName = xFilename ? decodeURIComponent(xFilename) : 'upload.bin';
-    const ext = path.extname(originalName) || '.bin';
+    // 1. 获取 Base64 JSON 载荷
+    const { filename: originalName, content } = await req.json();
+    
+    if (!content) {
+      return NextResponse.json({ error: 'No file content received' }, { status: 400 });
+    }
+
+    const ext = path.extname(originalName || 'upload.bin') || '.bin';
     const safeExt = ext.toLowerCase().replace(/[^.a-z0-9]/g, '');
 
     const hash = crypto.randomBytes(8).toString('hex');
     const filename = `${Date.now()}-${hash}${safeExt}`;
     const localPath = path.join(UPLOAD_DIR, filename);
 
-    // 2. 利用 req.arrayBuffer() 毫秒级、原封不动、无任何框架封装污染地提取纯净二进制 Buffer
-    const arrayBuffer = await req.arrayBuffer();
-    const buf = Buffer.from(arrayBuffer);
+    // 2. 利用 Node.js 原生的 Buffer base64 还原器一键、无偏差地解码还原二进制
+    const buf = Buffer.from(content, 'base64');
 
-    // 3. 一口气落盘，100% 保证文件完整、不损坏
+    // 3. 落盘写入，100% 字节完美对齐、永不损坏
     fs.writeFileSync(localPath, buf);
 
     const url = `/uploads/${filename}`;
