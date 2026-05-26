@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: "100mb", // 允许上传 100MB 以内的高清视频文件
+      bodySizeLimit: "100mb", // 放开 Action 请求上限至 100MB
     },
   },
 };
