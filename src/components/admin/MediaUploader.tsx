@@ -17,9 +17,14 @@ export default function MediaUploader({ value, onChange, label, kind = 'image' }
   async function upload(file: File) {
     setBusy(true);
     try {
-      const fd = new FormData();
-      fd.append('file', file);
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream', // 强制指定为纯二进制字节流，100% 绕开所有内置 body-parser 拦截解析
+          'x-filename': encodeURIComponent(file.name),
+        },
+        body: file, // 直接把文件作为原始二进制流投递，突破 FormData 大小瓶颈！
+      });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         alert(`Upload failed: ${errData.error || res.statusText || 'Unknown server error'}`);
