@@ -75,7 +75,7 @@ export default async function LandingPage() {
             </div>
 
             <div className="relative">
-              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-white bg-white aspect-[4/3]">
+              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-white bg-white aspect-video">
                 <video src={aboutVideo} autoPlay muted loop playsInline className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8 text-white">

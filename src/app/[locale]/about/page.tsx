@@ -73,7 +73,7 @@ export default async function AboutPage() {
             </div>
             
             <div className="relative">
-              <div className="aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-2xl relative z-10 border border-gray-100 bg-gray-50">
+              <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl relative z-10 border border-gray-100 bg-gray-50">
                 <video
                   src={aboutVideo}
                   autoPlay
