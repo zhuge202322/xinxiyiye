@@ -5,11 +5,19 @@ import { Download, FileText, MessageSquareText, X } from 'lucide-react';
 
 type InquiryType = 'quote' | 'sample';
 
-export default function ProductInquiryActions({ productName }: { productName: string }) {
+export default function ProductInquiryActions({ productName, specsPdf }: { productName: string; specsPdf?: string | null }) {
   const [inquiryType, setInquiryType] = useState<InquiryType | null>(null);
 
   const modalTitle = inquiryType === 'sample' ? 'Request Sample' : 'Get A Quote';
   const selectValue = inquiryType === 'sample' ? 'Request Free Samples' : 'Bulk Purchasing';
+
+  // 平滑滚动到 Specs 选项卡
+  function scrollToSpecs() {
+    const el = document.getElementById('product-tabs-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   return (
     <>
@@ -31,12 +39,24 @@ export default function ProductInquiryActions({ productName }: { productName: st
           >
             <FileText className="w-5 h-5 mr-2" /> Request Sample
           </button>
-          <button
-            type="button"
-            className="w-full bg-gray-100 text-brand-dark py-4 px-6 rounded-full font-bold text-lg hover:bg-gray-200 transition-all flex items-center justify-center"
-          >
-            <Download className="w-5 h-5 mr-2" /> Download Spec Sheet
-          </button>
+          {specsPdf ? (
+            <a
+              href={specsPdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-gray-100 text-brand-dark py-4 px-6 rounded-full font-bold text-lg hover:bg-gray-200 transition-all flex items-center justify-center cursor-pointer"
+            >
+              <Download className="w-5 h-5 mr-2 text-rose-500 animate-pulse" /> Download Spec Sheet
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={scrollToSpecs}
+              className="w-full bg-gray-100 text-brand-dark py-4 px-6 rounded-full font-bold text-lg hover:bg-gray-200 transition-all flex items-center justify-center"
+            >
+              <Download className="w-5 h-5 mr-2 text-gray-400" /> Download Spec Sheet
+            </button>
+          )}
         </div>
       </div>
 

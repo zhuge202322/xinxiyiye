@@ -175,7 +175,7 @@ export default function ProductDetailClient({ product, translations }: Props) {
         <CollapsibleProductDescription html={product.short_description || `<p>${translations.noShortDesc}</p>`} />
 
         {/* 2. 联动后的询盘 Action 动作，点击后会将具体的 SkuName 传入弹窗 */}
-        <ProductInquiryActions productName={displayName} />
+        <ProductInquiryActions productName={displayName} specsPdf={product.specsPdf} />
 
         <ul className="mt-8 space-y-3.5 border-t border-gray-100 pt-6 text-sm text-gray-500 font-medium">
           <li className="flex items-center">
