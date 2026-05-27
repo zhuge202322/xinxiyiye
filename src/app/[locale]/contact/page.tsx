@@ -127,12 +127,20 @@ export default async function ContactPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-2">{t('fieldEmail')}</label>
-                    <input type="email" placeholder={t('fieldEmailPh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
+                    <label className="block text-sm font-bold text-brand-dark mb-2">
+                      <span className="flex items-center gap-1">
+                        {t('fieldEmail')} <span className="text-rose-500 font-extrabold">*</span>
+                      </span>
+                    </label>
+                    <input type="email" required placeholder={t('fieldEmailPh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-2">{t('fieldPhone')}</label>
-                    <input type="tel" placeholder={t('fieldPhonePh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
+                    <label className="block text-sm font-bold text-brand-dark mb-2">
+                      <span className="flex items-center gap-1">
+                        {t('fieldPhone')} <span className="text-rose-500 font-extrabold">*</span>
+                      </span>
+                    </label>
+                    <input type="tel" required placeholder={t('fieldPhonePh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
                   </div>
                 </div>
 
@@ -163,7 +171,7 @@ export default async function ContactPage() {
                 </div>
 
                 <div className="pt-4">
-                  <button type="button" className="w-full bg-brand-primary text-white py-5 rounded-2xl font-bold text-xl hover:bg-brand-primary/90 hover:-translate-y-1 transition-all shadow-xl shadow-brand-primary/30 flex items-center justify-center">
+                  <button type="submit" className="w-full bg-brand-primary text-white py-5 rounded-2xl font-bold text-xl hover:bg-brand-primary/90 hover:-translate-y-1 transition-all shadow-xl shadow-brand-primary/30 flex items-center justify-center">
                     {t('sendInquiry')} <Send className="w-5 h-5 ml-3" />
                   </button>
                   <p className="text-sm text-gray-400 text-center mt-6">
