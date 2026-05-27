@@ -26,14 +26,11 @@ export async function POST(req: NextRequest) {
     const pass = process.env.SMTP_PASS;
     const adminEmail = process.env.ADMIN_EMAIL || user; // 如果未单独配置管理员邮箱，默认由自己接收
 
-    // 友情提示：如果环境变量一个都没配，说明管理员还没进行企业邮箱绑定
+    // 如果环境变量没有配齐，直接返回错误，以便前端显示红色的失败提示！
     if (!host || !user || !pass) {
-      console.warn('⚠️ [Mail Gateway Warning] SMTP configuration is missing in environment variables. Inquiry received but could not send email:', body);
-      // 为了不影响前端客户的提交体验（即便没配邮件，也提示成功提交），我们优雅地返回成功并提示进入后台处理
       return NextResponse.json({ 
-        success: true, 
-        message: 'Inquiry received. (SMTP not configured on server yet)' 
-      });
+        error: 'Mail gateway configuration (SMTP_HOST, SMTP_USER, SMTP_PASS) is missing on server.' 
+      }, { status: 500 });
     }
 
     // 1. 创建 nodemailer 传输承载器
@@ -45,7 +42,20 @@ export async function POST(req: NextRequest) {
         user,
         pass,
       },
+      // 缩短超时时间，这样如果密码错了，能快速给用户返回错误，不用等太久
+      connectionTimeout: 10000, 
+      greetingTimeout: 10000,
     });
+
+    // 2. 强校验连接有效性（测试邮箱账号和密码在 SiteGround 服务器上是否验证通过）
+    try {
+      await transporter.verify();
+    } catch (verifyError: any) {
+      console.error('❌ [SMTP Auth Failed] Unable to connect to SiteGround SMTP:', verifyError.message);
+      return NextResponse.json({ 
+        error: `Mail Server Authentication Failed: ${verifyError.message || 'Please double check SMTP_USER and SMTP_PASS.'}` 
+      }, { status: 500 });
+    }
 
     // 🛠️ 构造极其高端、专业、清晰的外贸客户询盘 HTML 排版邮件
     const sourceTag = productName 
