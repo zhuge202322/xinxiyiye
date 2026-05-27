@@ -43,10 +43,12 @@ model Product {
   specsFr            String         @default("")
   specsEs            String         @default("")
   specsAr            String         @default("")
+  specsPdf           String?
   formula            String         @default("")
   formulaFr          String         @default("")
   formulaEs          String         @default("")
   formulaAr          String         @default("")
+  formulaPdf         String?
   sortOrder          Int            @default(0)
   featured           Boolean        @default(false)
   createdAt          DateTime       @default(now())

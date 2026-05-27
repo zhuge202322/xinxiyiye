@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Star } from 'lucide-react';
+import { Check, Star, FileText } from 'lucide-react';
 import ProductGallery from './ProductGallery';
 import ProductInquiryActions from './ProductInquiryActions';
 import CollapsibleProductDescription from './CollapsibleProductDescription';
@@ -27,6 +27,8 @@ type Product = {
   short_description: string;
   images: ImageItem[];
   skus: SkuItem[];
+  specsPdf?: string | null;
+  formulaPdf?: string | null;
 };
 
 type Props = {
@@ -229,7 +231,53 @@ export default function ProductDetailClient({ product, translations }: Props) {
           </button>
         </div>
 
-        <div className="p-8 md:p-16">
+        <div className="p-8 md:p-16 space-y-8">
+          {/* Specs & Packaging PDF 下载卡片 */}
+          {activeTab === 'specs' && product.specsPdf && (
+            <div className="p-6 bg-slate-50 border border-slate-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 shrink-0">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-extrabold text-slate-800 text-sm md:text-base">Technical Specs & Packaging Document (PDF)</h4>
+                  <p className="text-xs text-slate-500 mt-1">Official certification and packaging testing report available for download.</p>
+                </div>
+              </div>
+              <a
+                href={product.specsPdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 shadow-md hover:shadow-lg transition shrink-0 text-sm"
+              >
+                <FileText className="w-4 h-4" /> Download Spec PDF
+              </a>
+            </div>
+          )}
+
+          {/* Formula & MSDS PDF 下载卡片 */}
+          {activeTab === 'formula' && product.formulaPdf && (
+            <div className="p-6 bg-slate-50 border border-slate-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 shrink-0">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-extrabold text-slate-800 text-sm md:text-base">Chemical Formula & MSDS / COA Document (PDF)</h4>
+                  <p className="text-xs text-slate-500 mt-1">Official material safety data sheet and chemical formula report available.</p>
+                </div>
+              </div>
+              <a
+                href={product.formulaPdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 shadow-md hover:shadow-lg transition shrink-0 text-sm"
+              >
+                <FileText className="w-4 h-4" /> Download MSDS PDF
+              </a>
+            </div>
+          )}
+
           <div
             className="
               prose prose-lg prose-brand max-w-none text-gray-600 

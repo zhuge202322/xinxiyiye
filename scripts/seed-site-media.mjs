@@ -18,6 +18,15 @@ const SLOTS = [
   // About / Landing 公司视频
   { key: 'about-video',           label: 'About / Landing 公司介绍视频',              url: '/bj/about.mp4',              kind: 'video' },
 
+  // About 研发与现代生产环境展示区 4 张图
+  { key: 'about-rd-image',        label: 'About 研发实验室图片',                      url: '/factory/rd.jpg',            kind: 'image' },
+  { key: 'about-exhibition-image', label: 'About 行业展会图片',                      url: '/factory/exhibition.jpg',    kind: 'image' },
+  { key: 'about-production-image', label: 'About 生产车间图片',                      url: '/factory/production.jpg',    kind: 'image' },
+  { key: 'about-equipment-image',  label: 'About 灌装车间图片',                      url: '/factory/equipment.jpg',     kind: 'image' },
+
+  // OEM / ODM 创新研发展示区 1 张图
+  { key: 'oem-rd-image',          label: 'OEM / ODM 研发创新图片',                    url: '/factory/rd.jpg',            kind: 'image' },
+
   // Landing 页产品展示 3 张
   { key: 'landing-line-1',        label: 'Google Landing 产品图 1',                  url: '/bj/bubble.jpg',             kind: 'image' },
   { key: 'landing-line-2',        label: 'Google Landing 产品图 2',                  url: '/bj/beads.jpg',              kind: 'image' },

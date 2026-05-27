@@ -58,6 +58,8 @@ export function formatProduct(p: any, locale: Locale = 'en'): any {
       p.formulaAr || '',
       locale,
     ),
+    specsPdf: p.specsPdf || null,
+    formulaPdf: p.formulaPdf || null,
     images: (p.images || []).map((img: any) => ({
       id: img.id,
       src: img.src,

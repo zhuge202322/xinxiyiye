@@ -15,6 +15,7 @@ export default async function OemOdmPage() {
   const locale = await getLocale();
   const lp = `/${locale}`;
   const bgHeader = await getMedia('page-header-bg', '/bj/dp.webp');
+  const imgOemRd = await getMedia('oem-rd-image', '/factory/rd.jpg');
 
   const RD_HIGHLIGHTS = [t('rd1'), t('rd2'), t('rd3'), t('rd4')];
   const CAPACITY_METRICS = [
@@ -85,7 +86,7 @@ export default async function OemOdmPage() {
           </div>
           <div className="relative">
             <div className="aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
-              <img src="/factory/rd.jpg" alt="R&D laboratory" className="w-full h-full object-cover" />
+              <img src={imgOemRd} alt="R&D laboratory" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-8 -left-8 bg-white p-6 rounded-3xl shadow-xl max-w-xs hidden md:block border border-gray-100">
               <div className="flex items-center gap-3 mb-2">

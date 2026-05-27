@@ -18,6 +18,11 @@ export default async function AboutPage() {
   const bgHeader = await getMedia('page-header-bg', '/bj/dp.webp');
   const aboutVideo = await getMedia('about-video', '/bj/about.mp4');
 
+  const imgRd = await getMedia('about-rd-image', '/factory/rd.jpg');
+  const imgExhibition = await getMedia('about-exhibition-image', '/factory/exhibition.jpg');
+  const imgProduction = await getMedia('about-production-image', '/factory/production.jpg');
+  const imgEquipment = await getMedia('about-equipment-image', '/factory/equipment.jpg');
+
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
       
@@ -108,25 +113,25 @@ export default async function AboutPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="aspect-[16/9] rounded-[2rem] overflow-hidden group shadow-sm relative">
-              <img src="/factory/rd.jpg" alt="R&D Laboratory" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={imgRd} alt="R&D Laboratory" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
                 <h4 className="text-white font-bold text-xl">{t('labCaption')}</h4>
               </div>
             </div>
             <div className="aspect-[16/9] rounded-[2rem] overflow-hidden group shadow-sm relative">
-              <img src="/factory/exhibition.jpg" alt="Industry Exhibitions" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={imgExhibition} alt="Industry Exhibitions" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
                 <h4 className="text-white font-bold text-xl">{t('exhibitionCaption')}</h4>
               </div>
             </div>
             <div className="aspect-[16/9] rounded-[2rem] overflow-hidden group shadow-sm relative">
-              <img src="/factory/production.jpg" alt="Production Workshop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={imgProduction} alt="Production Workshop" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
                 <h4 className="text-white font-bold text-xl">{t('workshopCaption')}</h4>
               </div>
             </div>
             <div className="aspect-[16/9] rounded-[2rem] overflow-hidden group shadow-sm relative">
-              <img src="/factory/equipment.jpg" alt="Automated Filling Line" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={imgEquipment} alt="Automated Filling Line" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
                 <h4 className="text-white font-bold text-xl">{t('fillingCaption')}</h4>
               </div>

@@ -26,8 +26,8 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
     nameFr, nameEs, nameAr,
     shortDescriptionFr, shortDescriptionEs, shortDescriptionAr,
     descriptionFr, descriptionEs, descriptionAr,
-    specs, specsFr, specsEs, specsAr,
-    formula, formulaFr, formulaEs, formulaAr,
+    specs, specsFr, specsEs, specsAr, specsPdf,
+    formula, formulaFr, formulaEs, formulaAr, formulaPdf,
   } = body;
 
   // replace images, categories and skus atomically
@@ -55,10 +55,12 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
       specsFr: specsFr || '',
       specsEs: specsEs || '',
       specsAr: specsAr || '',
+      specsPdf: specsPdf || null,
       formula: formula || '',
       formulaFr: formulaFr || '',
       formulaEs: formulaEs || '',
       formulaAr: formulaAr || '',
+      formulaPdf: formulaPdf || null,
       categories: {
         set: (categoryIds || []).map((cid: number) => ({ id: cid })),
       },

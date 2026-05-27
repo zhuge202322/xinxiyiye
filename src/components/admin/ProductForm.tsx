@@ -7,7 +7,7 @@ import MultiImageUploader, { ImageItem } from './MultiImageUploader';
 import ImageUploader from './ImageUploader';
 import TranslationTabs, { TranslationLocale } from './TranslationTabs';
 import { slugify } from '@/lib/slug';
-import { Save, ArrowLeft, Plus, Trash2, Layers } from 'lucide-react';
+import { Save, ArrowLeft, Plus, Trash2, Layers, FileText, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 
 type Category = { id: number; name: string };
@@ -36,7 +36,9 @@ type Props = {
     shortDescription: string;
     description: string;
     specs?: string;
+    specsPdf?: string;
     formula?: string;
+    formulaPdf?: string;
     featured?: boolean;
     images: ImageItem[];
     categoryIds: number[];
@@ -61,8 +63,10 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
   const [slugTouched, setSlugTouched] = useState(!!initial?.slug);
   const [shortDescription, setShortDescription] = useState(initial?.shortDescription || '');
   const [description, setDescription] = useState(initial?.description || '');
-  const [specs, setSpecs] = useState((initial as any)?.specs || '');
-  const [formula, setFormula] = useState((initial as any)?.formula || '');
+  const [specs, setSpecs] = useState(initial?.specs || '');
+  const [specsPdf, setSpecsPdf] = useState(initial?.specsPdf || '');
+  const [formula, setFormula] = useState(initial?.formula || '');
+  const [formulaPdf, setFormulaPdf] = useState(initial?.formulaPdf || '');
   const [featured, setFeatured] = useState(!!initial?.featured);
   const [images, setImages] = useState<ImageItem[]>(initial?.images || []);
   const [categoryIds, setCategoryIds] = useState<number[]>(initial?.categoryIds || []);
@@ -134,7 +138,9 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
           shortDescription,
           description,
           specs,
+          specsPdf,
           formula,
+          formulaPdf,
           images,
           categoryIds,
           featured,
@@ -400,11 +406,109 @@ export default function ProductForm({ mode, productId, initial, categories }: Pr
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
         <h3 className="text-sm font-bold text-slate-700 mb-3">Specs & Packaging (English / Default)</h3>
         <RichEditor value={specs} onChange={setSpecs} minHeight={300} />
+        
+        {/* PDF Spec 附件上传区 */}
+        <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide">Specs & Packaging (PDF 附件卡片 - 可选)</label>
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept=".pdf,application/pdf"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const fd = new FormData();
+                fd.append('file', file);
+                const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+                if (res.ok) {
+                  const { url } = await res.json();
+                  setSpecsPdf(url);
+                } else {
+                  alert('Upload PDF failed');
+                }
+              }}
+              className="hidden"
+              id="specs-pdf-upload"
+            />
+            <button
+              type="button"
+              onClick={() => document.getElementById('specs-pdf-upload')?.click()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+            >
+              <Upload className="w-3.5 h-3.5" /> 上传 PDF 证书文档
+            </button>
+
+            {specsPdf && (
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600">
+                <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
+                <a href={specsPdf} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-brand-primary truncate max-w-xs">
+                  {specsPdf.split('/').pop()}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setSpecsPdf('')}
+                  className="p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-rose-600"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
         <h3 className="text-sm font-bold text-slate-700 mb-3">Formula & MSDS (English / Default)</h3>
         <RichEditor value={formula} onChange={setFormula} minHeight={300} />
+
+        {/* PDF Formula 附件上传区 */}
+        <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide">Formula & MSDS / COA (PDF 附件卡片 - 可选)</label>
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept=".pdf,application/pdf"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const fd = new FormData();
+                fd.append('file', file);
+                const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+                if (res.ok) {
+                  const { url } = await res.json();
+                  setFormulaPdf(url);
+                } else {
+                  alert('Upload PDF failed');
+                }
+              }}
+              className="hidden"
+              id="formula-pdf-upload"
+            />
+            <button
+              type="button"
+              onClick={() => document.getElementById('formula-pdf-upload')?.click()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+            >
+              <Upload className="w-3.5 h-3.5" /> 上传 PDF 证书文档
+            </button>
+
+            {formulaPdf && (
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600">
+                <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
+                <a href={formulaPdf} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-brand-primary truncate max-w-xs">
+                  {formulaPdf.split('/').pop()}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setFormulaPdf('')}
+                  className="p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-rose-600"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <TranslationTabs title="Translations (Product)">
