@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Award, Globe, ChevronDown, Search, Menu, ChevronRight, MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import JourneyTimeline from "@/components/JourneyTimeline";
+import ContactFormClient from "@/components/ContactFormClient";
 import { getTranslations, getLocale } from 'next-intl/server';
 import { getMedia } from "@/lib/site-media";
 
@@ -20,6 +21,32 @@ export default async function ContactPage() {
   const email = await getMedia('contact-email', 'info@myklens.com');
   const phone = await getMedia('contact-phone', '+86 760-88220790 / 88220791');
   const mobile = await getMedia('contact-mobile', '+86 180 2215 3690');
+
+  // 构造传给客户端表单的多语言翻译
+  const formTranslations = {
+    fieldName: t('fieldName'),
+    fieldNamePh: t('fieldNamePh'),
+    fieldCompany: t('fieldCompany'),
+    fieldCompanyPh: t('fieldCompanyPh'),
+    fieldEmail: t('fieldEmail'),
+    fieldEmailPh: t('fieldEmailPh'),
+    fieldPhone: t('fieldPhone'),
+    fieldPhonePh: t('fieldPhonePh'),
+    fieldInquiryType: t('fieldInquiryType'),
+    fieldInquirySelect: t('fieldInquirySelect'),
+    inquiryOem: t('inquiryOem'),
+    inquiryOdm: t('inquiryOdm'),
+    inquirySamples: t('inquirySamples'),
+    inquiryDistribution: t('inquiryDistribution'),
+    inquiryAudit: t('inquiryAudit'),
+    fieldProject: t('fieldProject'),
+    fieldProjectPh: t('fieldProjectPh'),
+    sendInquiry: t('sendInquiry'),
+    privacyNote: t('privacyNote'),
+    privacyPolicy: t('privacyPolicy'),
+    submitTitle: t('submitTitle'),
+    submitDesc: t('submitDesc'),
+  };
 
   return (
     <div className="bg-[#f8f9fa] flex-1 flex flex-col">
@@ -107,79 +134,7 @@ export default async function ContactPage() {
 
           {/* Right: inquiry form */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-[2.5rem] p-8 md:p-14 shadow-2xl border border-gray-100 relative overflow-hidden h-full flex flex-col justify-center">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-brand-secondary rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
-              
-              <h3 className="text-3xl md:text-4xl font-extrabold text-brand-dark mb-4 relative z-10">{t('submitTitle')}</h3>
-              <p className="text-gray-500 font-medium mb-10 relative z-10 text-lg">{t('submitDesc')}</p>
-
-              <form className="space-y-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-2">{t('fieldName')}</label>
-                    <input type="text" placeholder={t('fieldNamePh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-2">{t('fieldCompany')}</label>
-                    <input type="text" placeholder={t('fieldCompanyPh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-2">
-                      <span className="flex items-center gap-1">
-                        {t('fieldEmail')} <span className="text-rose-500 font-extrabold">*</span>
-                      </span>
-                    </label>
-                    <input type="email" required placeholder={t('fieldEmailPh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-brand-dark mb-2">
-                      <span className="flex items-center gap-1">
-                        {t('fieldPhone')} <span className="text-rose-500 font-extrabold">*</span>
-                      </span>
-                    </label>
-                    <input type="tel" required placeholder={t('fieldPhonePh')} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition text-brand-dark" />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-2">{t('fieldInquiryType')}</label>
-                  <div className="relative">
-                    <select className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 pr-12 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition appearance-none text-brand-dark font-medium">
-                      <option value="">{t('fieldInquirySelect')}</option>
-                      <option>{t('inquiryOem')}</option>
-                      <option>{t('inquiryOdm')}</option>
-                      <option>{t('inquirySamples')}</option>
-                      <option>{t('inquiryDistribution')}</option>
-                      <option>{t('inquiryAudit')}</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center px-5 pointer-events-none text-gray-500">
-                      <ChevronDown className="w-5 h-5" />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-brand-dark mb-2">{t('fieldProject')}</label>
-                  <textarea 
-                    rows={5} 
-                    placeholder={t('fieldProjectPh')} 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition resize-none text-brand-dark"
-                  ></textarea>
-                </div>
-
-                <div className="pt-4">
-                  <button type="submit" className="w-full bg-brand-primary text-white py-5 rounded-2xl font-bold text-xl hover:bg-brand-primary/90 hover:-translate-y-1 transition-all shadow-xl shadow-brand-primary/30 flex items-center justify-center">
-                    {t('sendInquiry')} <Send className="w-5 h-5 ml-3" />
-                  </button>
-                  <p className="text-sm text-gray-400 text-center mt-6">
-                    {t('privacyNote')} <a href="#" className="underline hover:text-brand-primary">{t('privacyPolicy')}</a>.
-                  </p>
-                </div>
-              </form>
-            </div>
+            <ContactFormClient translations={formTranslations} />
           </div>
 
         </div>
