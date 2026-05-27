@@ -19,41 +19,33 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email and Phone are required' }, { status: 400 });
     }
 
-    // 读取环境变量配置
-    const host = process.env.SMTP_HOST;
-    const port = Number(process.env.SMTP_PORT || '465');
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
-    const adminEmail = process.env.ADMIN_EMAIL || user; // 如果未单独配置管理员邮箱，默认由自己接收
-
-    // 如果环境变量没有配齐，直接返回错误，以便前端显示红色的失败提示！
-    if (!host || !user || !pass) {
-      return NextResponse.json({ 
-        error: 'Mail gateway configuration (SMTP_HOST, SMTP_USER, SMTP_PASS) is missing on server.' 
-      }, { status: 500 });
-    }
+    // 🛠️ 黄金绑定 SiteGround 发信参数 (直接硬连，秒杀一切 Windows 环境变量多进程缓存读取问题)
+    const host = 'gcam1204.siteground.biz';
+    const port = 465;
+    const user = 'info@myklens.com';
+    const pass = 'Em88220790';
+    const adminEmail = 'info@myklens.com';
 
     // 1. 创建 nodemailer 传输承载器
     const transporter = nodemailer.createTransport({
       host,
       port,
-      secure: port === 465, // 465 端口采用 SSL 安全加密连接
+      secure: true, // SSL 安全加密连接
       auth: {
         user,
         pass,
       },
-      // 缩短超时时间，这样如果密码错了，能快速给用户返回错误，不用等太久
       connectionTimeout: 10000, 
       greetingTimeout: 10000,
     });
 
-    // 2. 强校验连接有效性（测试邮箱账号和密码在 SiteGround 服务器上是否验证通过）
+    // 2. 物理校验连接有效性
     try {
       await transporter.verify();
     } catch (verifyError: any) {
       console.error('❌ [SMTP Auth Failed] Unable to connect to SiteGround SMTP:', verifyError.message);
       return NextResponse.json({ 
-        error: `Mail Server Authentication Failed: ${verifyError.message || 'Please double check SMTP_USER and SMTP_PASS.'}` 
+        error: `Mail Server Authentication Failed: ${verifyError.message || 'Please check SMTP credentials.'}` 
       }, { status: 500 });
     }
 
