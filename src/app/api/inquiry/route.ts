@@ -35,17 +35,19 @@ export async function POST(req: NextRequest) {
         user,
         pass,
       },
-      connectionTimeout: 10000, 
-      greetingTimeout: 10000,
+      // 极速超时检测，防服务器防火墙默默拦截时前台长时间卡死
+      connectionTimeout: 5000, 
+      greetingTimeout: 5000,
+      socketTimeout: 5000,
     });
 
     // 2. 物理校验连接有效性
     try {
       await transporter.verify();
     } catch (verifyError: any) {
-      console.error('❌ [SMTP Auth Failed] Unable to connect to SiteGround SMTP:', verifyError.message);
+      console.error('❌ [SMTP Auth Failed] Unable to connect to SiteGround SMTP on Server:', verifyError.message);
       return NextResponse.json({ 
-        error: `Mail Server Authentication Failed: ${verifyError.message || 'Please check SMTP credentials.'}` 
+        error: `Cloud Server Mail Outbound Blocked or Failed: ${verifyError.message || 'Please open Outgoing Port 465 on your cloud firewall.'}` 
       }, { status: 500 });
     }
 
