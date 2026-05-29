@@ -1,6 +1,7 @@
 import { ArrowRight, Award, BadgeCheck, CheckCircle2, Factory, FlaskConical, Globe2, Headset, Leaf, Mail, PackageCheck, Phone, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
 import { getMedia } from "@/lib/site-media";
+import GoogleLandingFormClient from "@/components/GoogleLandingFormClient";
 
 export default async function LandingPage() {
   const t = await getTranslations('landingGoogle');
@@ -181,38 +182,22 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            <div id="quote" className="bg-brand-dark text-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl scroll-mt-24">
-              <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-extrabold mb-5">
-                <Headset className="w-4 h-4" /> {t('quoteBadge')}
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black mb-4">{t('quoteTitle')}</h2>
-              <p className="text-gray-300 font-medium leading-relaxed mb-8">
-                {t('quoteDesc')}
-              </p>
-              <form className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input type="text" placeholder={t('yourName')} className="w-full rounded-2xl bg-white px-5 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30" />
-                  <input type="text" placeholder={t('company')} className="w-full rounded-2xl bg-white px-5 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30" />
-                </div>
-                <input type="email" placeholder={t('email')} className="w-full rounded-2xl bg-white px-5 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30" />
-                <select className="w-full rounded-2xl bg-white px-5 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30">
-                  <option>{t('selectToilet')}</option>
-                  <option>{t('selectBeads')}</option>
-                  <option>{t('selectFreshener')}</option>
-                  <option>{t('selectDetergent')}</option>
-                  <option>{t('selectAppliance')}</option>
-                  <option>{t('selectOem')}</option>
-                </select>
-                <textarea rows={5} placeholder={t('messagePh')} className="w-full rounded-2xl bg-white px-5 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30 resize-none" />
-                <button type="button" className="w-full bg-brand-primary text-white py-4 rounded-2xl font-black text-lg hover:bg-brand-primary/90 transition shadow-lg">
-                  {t('submitInquiry')}
-                </button>
-              </form>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-sm text-gray-300 font-medium">
-                <a href="mailto:contact@myklens.com" className="flex items-center gap-3 hover:text-white transition"><Mail className="w-4 h-4 text-brand-accent" /> contact@myklens.com</a>
-                <a href="https://wa.me/8618022153690" className="flex items-center gap-3 hover:text-white transition"><Phone className="w-4 h-4 text-brand-accent" /> +86 180 2215 3690</a>
-              </div>
-            </div>
+            <GoogleLandingFormClient t={{
+              quoteBadge: t('quoteBadge'),
+              quoteTitle: t('quoteTitle'),
+              quoteDesc: t('quoteDesc'),
+              yourName: t('yourName'),
+              company: t('company'),
+              email: t('email'),
+              selectToilet: t('selectToilet'),
+              selectBeads: t('selectBeads'),
+              selectFreshener: t('selectFreshener'),
+              selectDetergent: t('selectDetergent'),
+              selectAppliance: t('selectAppliance'),
+              selectOem: t('selectOem'),
+              messagePh: t('messagePh'),
+              submitInquiry: t('submitInquiry')
+            }} />
           </div>
         </div>
       </section>

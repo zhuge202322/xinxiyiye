@@ -1,6 +1,7 @@
 import { BadgeCheck, CheckCircle2, Factory, FlaskConical, Leaf, Mail, MessageCircle, PackageCheck, Phone, ShieldCheck, Sparkles, Star } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
 import { getMedia } from "@/lib/site-media";
+import FacebookLandingFormClient from "@/components/FacebookLandingFormClient";
 
 export default async function FacebookLandingPage() {
   const t = await getTranslations('landingFb');
@@ -141,34 +142,21 @@ export default async function FacebookLandingPage() {
 
         <section id="lead" className="px-4 pb-7 scroll-mt-6">
           <div className="mx-auto max-w-md sm:max-w-2xl md:max-w-3xl">
-            <div className="rounded-[2rem] bg-brand-dark p-6 text-white shadow-2xl md:p-8">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-extrabold">
-                <CheckCircle2 className="h-4 w-4" /> {t('leadBadge')}
-              </div>
-              <h2 className="mb-3 text-3xl font-black leading-tight">{t('leadTitle')}</h2>
-              <p className="mb-6 text-sm font-medium leading-relaxed text-white/75">
-                {t('leadDesc')}
-              </p>
-              <form className="grid gap-3 sm:grid-cols-2">
-                <input type="text" placeholder={t('fieldName')} className="w-full rounded-2xl bg-white px-4 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30" />
-                <input type="email" placeholder={t('fieldEmail')} className="w-full rounded-2xl bg-white px-4 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30" />
-                <select className="w-full rounded-2xl bg-white px-4 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30">
-                  <option>{t('selectBeads')}</option>
-                  <option>{t('selectToilet')}</option>
-                  <option>{t('selectFreshener')}</option>
-                  <option>{t('selectAppliance')}</option>
-                  <option>{t('selectOem')}</option>
-                </select>
-                <textarea rows={3} placeholder={t('messagePh')} className="w-full resize-none rounded-2xl bg-white px-4 py-4 text-brand-dark outline-none focus:ring-4 focus:ring-brand-primary/30 sm:col-span-2" />
-                <button type="button" className="w-full rounded-2xl bg-brand-primary py-4 text-base font-black text-white shadow-lg sm:col-span-2">
-                  {t('submit')}
-                </button>
-              </form>
-              <div className="mt-5 grid gap-3 text-sm font-medium text-white/75 md:grid-cols-2">
-                <a href="mailto:contact@myklens.com" className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand-accent" /> contact@myklens.com</a>
-                <a href="tel:+8676088220790" className="flex items-center gap-2"><Phone className="h-4 w-4 text-brand-accent" /> +86 760-88220790</a>
-              </div>
-            </div>
+            <FacebookLandingFormClient t={{
+              leadBadge: t('leadBadge'),
+              leadTitle: t('leadTitle'),
+              leadDesc: t('leadDesc'),
+              fieldName: t('fieldName'),
+              fieldEmail: t('fieldEmail'),
+              fieldPhone: t('fieldPhone'),
+              selectBeads: t('selectBeads'),
+              selectToilet: t('selectToilet'),
+              selectFreshener: t('selectFreshener'),
+              selectAppliance: t('selectAppliance'),
+              selectOem: t('selectOem'),
+              messagePh: t('messagePh'),
+              submit: t('submit')
+            }} />
           </div>
         </section>
 
